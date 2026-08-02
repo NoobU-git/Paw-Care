@@ -88,12 +88,12 @@ body {
     justify-content: center;
     gap: 8px;
     text-decoration: none;
-    transition: all 0.1s ease;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     user-select: none;
 }
 
 .btn-brutalist:hover {
-    transform: translate(-1px, -1px);
+    transform: translate(-2px, -2px);
     box-shadow: var(--hard-shadow-lg);
 }
 
@@ -298,6 +298,12 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.bento-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0px #18181B; /* Using the hard-shadow-lg value */
 }
 
 .bento-box-lg { grid-column: span 7; }
@@ -345,6 +351,12 @@ body {
     padding: 24px;
     position: sticky;
     top: 90px;
+    transition: transform 0.4s ease-out, box-shadow 0.4s ease;
+}
+
+.workspace-card:hover {
+    box-shadow: 8px 8px 0px #18181B;
+    transform: translateY(-2px);
 }
 
 /* Fast-Track Demo Presets Bar */
@@ -1231,4 +1243,20 @@ body {
         padding: 16px;
         font-size: 13px;
     }
+}
+
+/* Custom Fluid Animations */
+@keyframes slideUpFade {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

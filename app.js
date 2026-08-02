@@ -560,6 +560,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderOutputUI(data) {
         elements.resultPlaceholder.classList.add('hidden');
         elements.resultContent.classList.remove('hidden');
+        
+        // Trigger fluid slide up animation
+        elements.resultContent.classList.remove('animate-slide-up');
+        void elements.resultContent.offsetWidth; // trigger reflow
+        elements.resultContent.classList.add('animate-slide-up');
 
         // Status Banner
         if (data.statusType === 'red') {
