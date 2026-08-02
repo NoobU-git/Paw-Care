@@ -1119,3 +1119,117 @@ button {
         flex-direction: column;
     }
 }
+
+/* ==========================================================================
+   SCROLL ANIMATIONS & DECORATIONS
+   ========================================================================== */
+
+/* Background Ambient Blob */
+body::before {
+    content: '';
+    position: fixed;
+    top: -20vh;
+    left: -10vw;
+    width: 50vw;
+    height: 50vh;
+    background: radial-gradient(circle, rgba(15, 82, 186, 0.04) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -20vh;
+    right: -10vw;
+    width: 60vw;
+    height: 60vh;
+    background: radial-gradient(circle, rgba(245, 124, 0, 0.03) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Reveal On Scroll */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Bento Box Enhancements */
+.bento-box {
+    overflow: hidden; /* For images */
+    position: relative;
+    z-index: 1;
+}
+
+.bento-image-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    opacity: 0.15;
+    transition: var(--transition-fluid);
+}
+
+.bento-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bento-box:hover .bento-image-wrap {
+    opacity: 0.3;
+    transform: scale(1.05);
+}
+
+/* Colored Cards */
+.bento-color-blue {
+    background: linear-gradient(135deg, #ffffff 0%, var(--clinical-blue-bg) 100%);
+    border-color: rgba(15, 82, 186, 0.1);
+}
+.bento-color-blue .bento-icon {
+    color: var(--clinical-blue);
+    background: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.bento-color-yellow {
+    background: linear-gradient(135deg, #ffffff 0%, var(--amber-warning-bg) 100%);
+    border-color: rgba(245, 124, 0, 0.1);
+}
+.bento-color-yellow .bento-icon {
+    color: var(--amber-warning);
+    background: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.bento-color-green {
+    background: linear-gradient(135deg, #ffffff 0%, var(--emerald-safe-bg) 100%);
+    border-color: rgba(46, 125, 50, 0.1);
+}
+.bento-color-green .bento-icon {
+    color: var(--emerald-safe);
+    background: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.bento-color-red {
+    background: linear-gradient(135deg, #ffffff 0%, var(--red-emergency-bg) 100%);
+    border-color: rgba(198, 40, 40, 0.1);
+}
+.bento-color-red .bento-icon {
+    color: var(--red-emergency);
+    background: white;
+    box-shadow: var(--shadow-sm);
+}
