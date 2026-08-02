@@ -1267,8 +1267,7 @@ body::after {
 .floating-deco {
     position: absolute;
     color: var(--text-primary);
-    /* Sangat tipis/samar agar tidak mengganggu fokus (low contrast) */
-    opacity: 0.015; 
+    opacity: 0.08; 
     animation: floatAnim 10s ease-in-out infinite alternate;
 }
 
@@ -1278,9 +1277,9 @@ body::after {
 .floating-deco.deco-paw:nth-child(3) { bottom: -5%; left: 30%; width: 90px; height: 90px; animation-duration: 14s; animation-delay: -7s; transform: rotate(45deg); }
 
 /* Positioning for Medical Accents */
-.floating-deco.deco-medical:nth-child(4) { top: 25%; right: 25%; width: 48px; height: 48px; animation-duration: 9s; animation-delay: -1s; color: var(--red-emergency); opacity: 0.02; }
-.floating-deco.deco-medical:nth-child(5) { bottom: 20%; left: 15%; width: 64px; height: 64px; animation-duration: 11s; animation-delay: -5s; color: var(--clinical-blue); opacity: 0.02; }
-.floating-deco.deco-medical:nth-child(6) { top: 50%; left: 50%; width: 32px; height: 32px; animation-duration: 8s; animation-delay: -2s; transform: translate(-50%, -50%); opacity: 0.02; }
+.floating-deco.deco-medical:nth-child(4) { top: 25%; right: 25%; width: 48px; height: 48px; animation-duration: 9s; animation-delay: -1s; color: var(--red-emergency); opacity: 0.1; }
+.floating-deco.deco-medical:nth-child(5) { bottom: 20%; left: 15%; width: 64px; height: 64px; animation-duration: 11s; animation-delay: -5s; color: var(--clinical-blue); opacity: 0.1; }
+.floating-deco.deco-medical:nth-child(6) { top: 50%; left: 50%; width: 32px; height: 32px; animation-duration: 8s; animation-delay: -2s; transform: translate(-50%, -50%); opacity: 0.1; }
 
 @keyframes floatAnim {
     0% { transform: translateY(0px) rotate(0deg); }
