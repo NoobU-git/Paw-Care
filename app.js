@@ -454,8 +454,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('akinatorQuestionCard').classList.add('hidden');
             document.getElementById('akinatorLoading').classList.remove('hidden');
 
-            // Fetch next from AI
-            await processGeminiVisionAPI(akinatorState.originalInput, akinatorState.originalPetType, akinatorState.originalPhotos, true);
+            // Fetch next from AI (Hanya kirim foto di pertanyaan pertama saat Inisialisasi, jangan kirim lagi di lanjutan)
+            const photosToSend = [];
+            await processGeminiVisionAPI(akinatorState.originalInput, akinatorState.originalPetType, photosToSend, true);
         });
     });
 

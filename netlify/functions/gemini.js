@@ -119,7 +119,12 @@ Jika sudah yakin (confidence >= 92%):
 
       // Pesan terakhir agar melanjutkan diagnosis (hanya jika ada history, untuk mencegah double user role)
       if (history.length > 0) {
-        contents.push({ role: "user", parts: [{ text: "Berdasarkan semua jawaban di atas, berikan pertanyaan spesifik berikutnya atau diagnosis akhir." }] });
+        const lastIdx = contents.length - 1;
+        if (contents[lastIdx].role === "user") {
+          contents[lastIdx].parts[0].text += "\n\nBerdasarkan semua jawaban di atas, berikan pertanyaan spesifik berikutnya atau diagnosis akhir.";
+        } else {
+          contents.push({ role: "user", parts: [{ text: "Berdasarkan semua jawaban di atas, berikan pertanyaan spesifik berikutnya atau diagnosis akhir." }] });
+        }
       }
 
       const requestBody = {
