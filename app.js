@@ -59,6 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "Klinik & Pet Emergency VetCare", dist: "4.8 km", phone: "081165004455" }
     ];
 
+    // Initialize Icons on First Load
+    if (window.lucide) window.lucide.createIcons();
+
     // Pet Species Switch
     elements.optCat.addEventListener('click', () => {
         state.selectedPetType = 'kucing';
