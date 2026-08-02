@@ -421,10 +421,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.btn-akinator').forEach(b => b.disabled = true);
             
             // Add to UI history
+            const qNum = akinatorState.history.length + 1;
             const historyDiv = document.getElementById('akinatorHistory');
             historyDiv.innerHTML += `
                 <div class="akinator-history-item">
-                    <div class="akinator-history-q">${currentQuestion}</div>
+                    <div class="akinator-history-q"><span style="font-weight:800; color:var(--clinical-blue); margin-right:4px;">Q${qNum}:</span> ${currentQuestion}</div>
                     <div class="akinator-history-a">${answer}</div>
                 </div>
             `;
