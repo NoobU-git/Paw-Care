@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PawCare AI – Triase Medis Darurat Hewan Peliharaan</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Pertolongan pertama darurat hewan peliharaan berbasis AI Multi-Modal. Triase medis medis < 5 detik dengan rujukan jurnal SINTA terakreditasi.">
+    <meta name="author" content="Ichsan Nurpratama Dikara - Universitas Mikroskil">
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Stylesheet with Cache-Buster v10.0.1 -->
+    <link rel="stylesheet" href="styles.css?v=10.0.1">
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <a href="#" class="brand-logo">
+                <div class="brand-icon">
+                    <i data-lucide="shield-alert"></i>
+                </div>
+                <div class="brand-title">
+                    PawCare <span>AI v2.0</span>
+                </div>
+            </a>
+
+            <nav class="nav-links">
+                <a href="#workspace" class="btn-brutalist btn-brutalist-emergency">
+                    <i data-lucide="activity"></i> Triase Darurat
+                </a>
+                <button type="button" class="btn-brutalist" id="btnOpenVetNav">
+                    <i data-lucide="map-pin"></i> Vet 24 Jam
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Main Container -->
+    <main class="page-container">
+
+        <!-- SECTION 1: HERO LANDING (The Hook) -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="badge-mono">
+                    <i data-lucide="award"></i> EVIDENCE-BASED VETERINARY AI
+                </div>
+                
+                <h1 class="hero-headline">
+                    Pertolongan Pertama Darurat Anabul.
+                </h1>
+                
+                <p class="hero-subheadline">
+                    Triase medis instan berbasis bukti ilmiah veteriner. Menganalisis kondisi fisik anabul & gejala darurat dalam &lt; 5 detik.
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="#workspace" class="btn-brutalist btn-brutalist-primary">
+                        <i data-lucide="sparkles"></i> Mulai Analisis Darurat
+                    </a>
+                    <button type="button" class="btn-brutalist" id="btnHeroVet">
+                        <i data-lucide="map-pin"></i> Cari Vet 24 Jam
+                    </button>
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <div class="stat-value">93%</div>
+                        <div class="stat-label">Akurasi Triase</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">&lt; 5s</div>
+                        <div class="stat-label">Kecepatan Analisis</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">SINTA</div>
+                        <div class="stat-label">Jurnal Veteriner</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 2: TRUST & FEATURES (Bento Grid) -->
+        <section class="bento-grid-section">
+            <div class="section-header">
+                <div class="badge-mono">FITUR UNGGULAN</div>
+                <h2>Dirancang Untuk Situasi Kritis</h2>
+            </div>
+
+            <div class="bento-grid">
+                <div class="bento-box bento-box-lg">
+                    <div class="bento-icon">
+                        <i data-lucide="camera" style="width:24px; height:24px;"></i>
+                    </div>
+                    <div>
+                        <div class="bento-title">Multi-Modal Vision AI</div>
+                        <div class="bento-desc">Membaca piksel foto kondisi fisik (mata, gusi, ruam kulit, atau muntahan) secara presisi real-time.</div>
+                    </div>
+                </div>
+
+                <div class="bento-box bento-box-sm">
+                    <div class="bento-icon">
+                        <i data-lucide="siren" style="width:24px; height:24px;"></i>
+                    </div>
+                    <div>
+                        <div class="bento-title">Traffic Light Alert</div>
+                        <div class="bento-desc">Sistem indikator darurat Merah (Kritis), Kuning (Warning), dan Hijau (Pemulihan).</div>
+                    </div>
+                </div>
+
+                <div class="bento-box bento-box-sm">
+                    <div class="bento-icon">
+                        <i data-lucide="book-open" style="width:24px; height:24px;"></i>
+                    </div>
+                    <div>
+                        <div class="bento-title">Jurnal SINTA / IPB / UGM</div>
+                        <div class="bento-desc">Setiap panduan pertolongan dilandasi sitasi ilmiah medis veteriner terakreditasi.</div>
+                    </div>
+                </div>
+
+                <div class="bento-box bento-box-lg">
+                    <div class="bento-icon">
+                        <i data-lucide="navigation" style="width:24px; height:24px;"></i>
+                    </div>
+                    <div>
+                        <div class="bento-title">GPS Emergency Vet Finder</div>
+                        <div class="bento-desc">Pencarian klinik hewan 24 jam terdekat dengan fitur 1-tap panggilan telepon darurat.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <!-- SECTION 3: TRIAGE WORKSPACE & DASHBOARD (Split View) -->
+        <section id="workspace" class="workspace-section">
+            <div class="section-header">
+                <div class="badge-mono">CORE TOOL</div>
+                <h2>Formulir Analisis Multi-Modal</h2>
+            </div>
+
+            <div class="workspace-layout">
+                <!-- Left Column: Input Form Workspace -->
+                <div class="workspace-card">
+                    
+                    <!-- Fast-Track Demo Presets Bar -->
+                    <div class="demo-preset-bar">
+                        <div class="preset-title">
+                            <i data-lucide="zap" style="width:12px; height:12px;"></i> DEMO PRESET DEWAN JURI
+                        </div>
+                        <div class="preset-pills-row">
+                            <button type="button" class="preset-pill-btn" data-preset="cat-skin">🐱 Kucing Jamur</button>
+                            <button type="button" class="preset-pill-btn" data-preset="dog-vomit">🐶 Pug Muntah</button>
+                            <button type="button" class="preset-pill-btn" data-preset="dog-mange">🐶 Kudis Mange</button>
+                            <button type="button" class="preset-pill-btn" data-preset="mouth-pop">👄 Papiloma</button>
+                        </div>
+                    </div>
+
+                    <!-- Pet Type Switches -->
+                    <div class="pet-selector-group">
+                        <button type="button" class="pet-selector-btn active" id="optCat">
+                            <i data-lucide="cat"></i> Kucing
+                        </button>
+                        <button type="button" class="pet-selector-btn" id="optDog">
+                            <i data-lucide="dog"></i> Anjing
+                        </button>
+                    </div>
+
+                    <!-- Photo Upload Dropzone -->
+                    <div class="photo-dropzone-box" id="dropzoneBox">
+                        <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+                        
+                        <div id="dropzoneEmpty">
+                            <div class="dropzone-icon-wrap">
+                                <i data-lucide="upload-cloud"></i>
+                            </div>
+                            <div class="dropzone-title">Ambil / Upload Foto Anabul</div>
+                            <div class="dropzone-sub">Klik atau drag foto mata, gusi, ruam, atau muntahan</div>
+                        </div>
+
+                        <!-- Gallery Thumbnails Preview -->
+                        <div id="dropzonePreview" class="hidden">
+                            <div class="dropzone-title" style="text-align:left; font-size:12px; margin-bottom:8px;">
+                                FOTO TERCATAT (<span id="photoCountNum">0</span>/4):
+                            </div>
+                            <div class="photo-preview-grid" id="photoGalleryGrid"></div>
+                            
+                            <!-- Focus Selector Pills -->
+                            <div class="focus-selector-box">
+                                <span style="font-size:11px; font-weight:700; color:var(--text-secondary);">FOKUS VISUAL:</span>
+                                <button type="button" class="focus-tag-btn active" data-focus="auto">🤖 Auto</button>
+                                <button type="button" class="focus-tag-btn" data-focus="muntah">🤮 Muntahan</button>
+                                <button type="button" class="focus-tag-btn" data-focus="kulit">🩺 Jamur/Luka</button>
+                                <button type="button" class="focus-tag-btn" data-focus="mulut">👄 Papiloma</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Symptom Textarea -->
+                    <textarea class="custom-textarea-field" id="inputSymptoms" rows="4" placeholder="Deskripsikan gejala darurat anabul (misal: lemas, muntah makanan, gatal, ruam merah)..."></textarea>
+
+                    <!-- Scanner Line Indicator -->
+                    <div class="scanner-bar-container hidden" id="scannerBar">
+                        <div class="scanner-laser-line"></div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="button" class="btn-brutalist btn-brutalist-emergency" id="btnSubmit" style="width:100%;">
+                        <i data-lucide="sparkles"></i> Analisis Kesehatan Sekarang
+                    </button>
+                </div>
+
+                <!-- Right Column: Live Results Dashboard Panel -->
+                <div class="results-dashboard-panel" id="resultSection">
+                    
+                    <!-- Default Initial State Placeholder -->
+                    <div id="resultPlaceholder" style="text-align:center; padding:48px 16px; color:var(--text-muted);">
+                        <i data-lucide="activity" style="width:48px; height:48px; margin-bottom:12px;"></i>
+                        <h3 style="font-family:var(--font-serif); font-size:22px; color:var(--text-primary);">Siap Menerima Data Triase</h3>
+                        <p style="font-size:14px; margin-top:4px;">Upload foto atau tekan tombol preset untuk melihat hasil analisis live.</p>
+                    </div>
+
+                    <!-- AKINATOR SECTION: Interactive Q&A Diagnosis -->
+                    <div id="akinatorSection" class="hidden">
+                        <!-- Header -->
+                        <div class="akinator-header">
+                            <div class="akinator-icon-pulse">
+                                <i data-lucide="stethoscope"></i>
+                            </div>
+                            <div>
+                                <h3 class="akinator-title">Diagnosis Interaktif</h3>
+                                <p class="akinator-subtitle">Jawab pertanyaan untuk mempersempit kemungkinan penyakit</p>
+                            </div>
+                        </div>
+
+                        <!-- Confidence Progress Bar -->
+                        <div class="akinator-progress-wrapper">
+                            <div class="akinator-progress-label">
+                                <span>Keyakinan AI</span>
+                                <span id="akinatorConfidenceText">0%</span>
+                            </div>
+                            <div class="akinator-progress-bar">
+                                <div class="akinator-progress-fill" id="akinatorProgressFill" style="width: 0%"></div>
+                            </div>
+                            <div class="akinator-possible-conditions" id="akinatorPossibleConditions"></div>
+                        </div>
+
+                        <!-- Conversation History -->
+                        <div class="akinator-history" id="akinatorHistory"></div>
+
+                        <!-- Current Question Card -->
+                        <div class="akinator-question-card" id="akinatorQuestionCard">
+                            <div class="akinator-question-number" id="akinatorQuestionNumber">Pertanyaan 1</div>
+                            <p class="akinator-question-text" id="akinatorQuestionText">Memuat pertanyaan...</p>
+                            <div class="akinator-answer-buttons">
+                                <button type="button" class="btn-akinator btn-akinator-yes" data-answer="ya">
+                                    <i data-lucide="check-circle"></i> Ya
+                                </button>
+                                <button type="button" class="btn-akinator btn-akinator-no" data-answer="tidak">
+                                    <i data-lucide="x-circle"></i> Tidak
+                                </button>
+                                <button type="button" class="btn-akinator btn-akinator-unsure" data-answer="tidak tahu">
+                                    <i data-lucide="help-circle"></i> Tidak Tahu
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Loading indicator for next question -->
+                        <div class="akinator-loading hidden" id="akinatorLoading">
+                            <div class="akinator-loading-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <p>AI sedang menganalisis jawaban...</p>
+                        </div>
+                    </div>
+
+                    <!-- Live Results Content -->
+                    <div id="resultContent" class="hidden">
+                        
+                        <!-- Status Banner Card -->
+                        <div class="status-banner status-banner-red" id="statusBanner">
+                            <div class="status-icon-box" id="statusIcon">
+                                <i data-lucide="alert-triangle" style="color:var(--red-emergency);"></i>
+                            </div>
+                            <div>
+                                <div class="badge-mono" id="triageBadge">STATUS: DARURAT / KRITIS</div>
+                                <h3 class="status-info-heading" id="triageTitle">Regurgitasi / Muntah Makanan (Gastritis Akut)</h3>
+                                <p class="status-info-desc" id="triageDesc">Memerlukan penanganan pertolongan pertama awal dan pemantauan ketat.</p>
+                            </div>
+                        </div>
+
+                        <!-- AI Visual Analysis Box -->
+                        <div class="ai-analysis-box hidden" id="aiAnalysisBox">
+                            <div class="preset-title" style="margin-bottom:8px; color:var(--clinical-blue);">
+                                <i data-lucide="scan-search"></i> HASIL OBSERVASI KLINIS
+                            </div>
+                            <p id="aiAnalysisText" class="ai-analysis-text"></p>
+                        </div>
+
+                        <!-- Action Checklists -->
+                        <div id="actionCardsContainer"></div>
+
+                        <!-- Warning Callout Box -->
+                        <div class="warning-callout-box">
+                            <i data-lucide="alert-octagon" style="color:var(--red-emergency); flex-shrink:0;"></i>
+                            <p>PERINGATAN MEDIS: Dilarang keras memberikan obat manusia (Paracetamol/Panadol) kepada kucing atau anjing karena racun berakibat fatal!</p>
+                        </div>
+
+                        <!-- SINTA Journal Citations -->
+                        <div class="citations-box">
+                            <div class="preset-title" style="margin-bottom:10px;">
+                                <i data-lucide="file-check"></i> LANDASAN ILMIAH & CITASI JURNAL (SINTA TERAKREDITASI)
+                            </div>
+                            <div id="citationsList"></div>
+                        </div>
+
+                        <!-- Results Action Buttons Row -->
+                        <div class="results-actions-row">
+                            <button type="button" class="btn-brutalist btn-brutalist-primary" id="btnExportPDF" style="flex:1;">
+                                <i data-lucide="download"></i> Simpan PDF Rujukan
+                            </button>
+                            <button type="button" class="btn-brutalist" id="btnOpenVetMap" style="flex:1;">
+                                <i data-lucide="map-pin"></i> Cari Vet Terdekat
+                            </button>
+                        </div>
+
+                        <!-- Disclaimer Medis -->
+                        <div class="disclaimer-box">
+                            <i data-lucide="info" style="flex-shrink:0; width:16px; height:16px;"></i>
+                            <p><strong>Disclaimer:</strong> Hasil analisis ini adalah panduan triase awal dan <em>bukan</em> pengganti diagnosis dokter hewan. Diagnosis pasti tetap memerlukan pemeriksaan klinis langsung oleh Dokter Hewan berlisensi.</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Emergency Vet GPS Bottom Sheet Modal -->
+    <div class="modal-overlay hidden" id="vetBottomSheet">
+        <div class="modal-bottom-sheet">
+            <div class="modal-header">
+                <h3 style="font-family:var(--font-serif); font-size:20px;">
+                    <i data-lucide="map-pin" style="color:var(--red-emergency);"></i> Klinik Vet 24 Jam Terdekat
+                </h3>
+                <button type="button" class="btn-brutalist" id="btnCloseVetModal" style="padding:4px 8px;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="vet-list-group" id="vetClinicList"></div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar Sticky -->
+    <nav class="mobile-bottom-nav">
+        <a href="#workspace" class="mobile-nav-btn active">
+            <i data-lucide="sparkles"></i>
+            <span>Triase</span>
+        </a>
+        <button type="button" class="mobile-nav-btn" id="btnMobileVet">
+            <i data-lucide="map-pin"></i>
+            <span>Vet 24h</span>
+        </button>
+    </nav>
+
+    <!-- App Script with Cache-Buster v10.0.0 -->
+    <script src="app.js?v=10.0.0"></script>
+</body>
+</html>
