@@ -654,10 +654,10 @@ document.addEventListener('DOMContentLoaded', () => {
             el.className = 'vet-item-card';
             el.innerHTML = `
                 <div>
-                    <h5 style="font-family:var(--font-serif); font-size:16px;">${item.name}</h5>
-                    <p style="font-size:12px; color:var(--text-secondary);">±${item.dist} dari lokasimu</p>
+                    <div>${item.name}</div>
+                    <div style="color:var(--text-secondary);">±${item.dist} dari lokasimu</div>
                 </div>
-                <a href="tel:${item.phone}" class="btn-brutalist btn-brutalist-emergency" style="padding:6px 12px; font-size:12px;">
+                <a href="tel:${item.phone}" class="btn-brutalist btn-brutalist-emergency" style="padding:6px 12px;">
                     <i data-lucide="phone" style="width:12px; height:12px;"></i> Telepon
                 </a>
             `;
