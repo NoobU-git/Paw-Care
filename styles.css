@@ -92,6 +92,14 @@ button {
     font-family: inherit;
 }
 
+button:focus-visible,
+a:focus-visible,
+textarea:focus-visible,
+input:focus-visible {
+    outline: 3px solid rgba(15, 82, 186, 0.45);
+    outline-offset: 3px;
+}
+
 .hidden {
     display: none !important;
 }
@@ -1138,8 +1146,18 @@ button {
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .reveal-on-scroll { opacity: 1; transform: none; }
+}
+
 /* ==========================================================================
-   SCROLL ANIMATIONS & DECORATIONS
+   SCROLL ANIMATIONS
    ========================================================================== */
 
 /* Background Ambient Blob */
@@ -1284,4 +1302,104 @@ body::after {
 @keyframes floatAnim {
     0% { transform: translateY(0px) rotate(0deg); }
     100% { transform: translateY(-40px) rotate(15deg); }
+}
+
+/* Small-screen polish: keep the single responsive layout readable and tappable. */
+@media (max-width: 600px) {
+    .page-container {
+        padding: 88px 16px 104px;
+    }
+
+    .nav-container {
+        padding: 0 16px;
+    }
+
+    .brand-title {
+        font-size: 16px;
+    }
+
+    .brand-title span {
+        display: none;
+    }
+
+    .hero-section {
+        min-height: auto;
+        padding: 28px 0 12px;
+    }
+
+    .hero-headline {
+        font-size: clamp(2.25rem, 12vw, 3.5rem);
+        line-height: 1.04;
+        overflow-wrap: anywhere;
+    }
+
+    .hero-subheadline {
+        font-size: 15px;
+    }
+
+    .hero-cta-group,
+    .hero-cta-group .btn-brutalist {
+        width: 100%;
+    }
+
+    .hero-cta-group .btn-brutalist {
+        justify-content: center;
+    }
+
+    .stats-bar {
+        gap: 10px;
+        padding: 16px 0;
+    }
+
+    .stat-value {
+        font-size: 18px;
+    }
+
+    .stat-label {
+        font-size: 10px;
+    }
+
+    .section-divider {
+        margin: 48px 0;
+    }
+
+    .section-header {
+        margin-bottom: 28px;
+        text-align: left;
+    }
+
+    .section-header h2 {
+        font-size: 27px;
+    }
+
+    .workspace-card,
+    .result-card {
+        border-radius: var(--radius-md);
+    }
+
+    .mobile-bottom-nav {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .floating-deco.deco-paw {
+        opacity: 0.04;
+        transform: scale(0.65);
+    }
+}
+
+/* Never animate if the user has asked the OS for less motion. */
+@media (prefers-reduced-motion: reduce) {
+    .floating-deco,
+    .bento-image-wrap {
+        animation: none;
+        transition: none;
+    }
+
+    html .reveal-on-scroll,
+    html .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
