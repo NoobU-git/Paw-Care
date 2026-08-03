@@ -59,6 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "Klinik & Pet Emergency VetCare", dist: "4.8 km", phone: "081165004455" }
     ];
 
+    // Scroll Animation Observer (Fade In/Out on Scroll)
+    const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+            } else {
+                entry.target.classList.remove('is-visible');
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => scrollObserver.observe(el));
+
+    // Initialize Icons on First Load
+    if (window.lucide) window.lucide.createIcons();
+
     // Pet Species Switch
     elements.optCat.addEventListener('click', () => {
         state.selectedPetType = 'kucing';
@@ -421,10 +437,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.btn-akinator').forEach(b => b.disabled = true);
             
             // Add to UI history
+            const qNum = akinatorState.history.length + 1;
             const historyDiv = document.getElementById('akinatorHistory');
             historyDiv.innerHTML += `
                 <div class="akinator-history-item">
-                    <div class="akinator-history-q">${currentQuestion}</div>
+                    <div class="akinator-history-q"><span style="font-weight:800; color:var(--clinical-blue); margin-right:4px;">Q${qNum}:</span> ${currentQuestion}</div>
                     <div class="akinator-history-a">${answer}</div>
                 </div>
             `;
@@ -437,8 +454,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('akinatorQuestionCard').classList.add('hidden');
             document.getElementById('akinatorLoading').classList.remove('hidden');
 
-            // Fetch next from AI
-            await processGeminiVisionAPI(akinatorState.originalInput, akinatorState.originalPetType, akinatorState.originalPhotos, true);
+            // Fetch next from AI (Hanya kirim foto di pertanyaan pertama saat Inisialisasi, jangan kirim lagi di lanjutan)
+            const photosToSend = [];
+            await processGeminiVisionAPI(akinatorState.originalInput, akinatorState.originalPetType, photosToSend, true);
         });
     });
 
@@ -560,6 +578,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderOutputUI(data) {
         elements.resultPlaceholder.classList.add('hidden');
         elements.resultContent.classList.remove('hidden');
+        
+        // Trigger fluid slide up animation
+        elements.resultContent.classList.remove('animate-slide-up');
+        void elements.resultContent.offsetWidth; // trigger reflow
+        elements.resultContent.classList.add('animate-slide-up');
 
         // Status Banner
         if (data.statusType === 'red') {
@@ -645,10 +668,10 @@ document.addEventListener('DOMContentLoaded', () => {
             el.className = 'vet-item-card';
             el.innerHTML = `
                 <div>
-                    <h5 style="font-family:var(--font-serif); font-size:16px;">${item.name}</h5>
-                    <p style="font-size:12px; color:var(--text-secondary);">±${item.dist} dari lokasimu</p>
+                    <div>${item.name}</div>
+                    <div style="color:var(--text-secondary);">±${item.dist} dari lokasimu</div>
                 </div>
-                <a href="tel:${item.phone}" class="btn-brutalist btn-brutalist-emergency" style="padding:6px 12px; font-size:12px;">
+                <a href="tel:${item.phone}" class="btn-brutalist btn-brutalist-emergency" style="padding:6px 12px;">
                     <i data-lucide="phone" style="width:12px; height:12px;"></i> Telepon
                 </a>
             `;
