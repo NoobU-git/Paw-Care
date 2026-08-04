@@ -171,7 +171,7 @@ Jika sudah yakin (confidence >= 92%):
           console.error("Gemini API Error (Semua Kunci Gagal):", lastError);
           return {
             statusCode: 429,
-            body: JSON.stringify({ success: false, error: "Semua server AI sibuk. Tunggu 1 menit lalu coba lagi." }),
+            body: JSON.stringify({ success: false, error: "Semua server AI sibuk. Detail: " + lastError }),
           };
       }
       
