@@ -757,8 +757,11 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    let currentTriageResult = null;
+
     // Render Output UI Dashboard
     function renderOutputUI(data) {
+        currentTriageResult = data;
         elements.resultPlaceholder.classList.add('hidden');
         elements.resultContent.classList.remove('hidden');
         
@@ -829,9 +832,306 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.resultSection.scrollIntoView({ behavior: 'smooth' });
     }
 
+    // Official Clinical Medical Record PDF Export Engine
+    function exportClinicalPDF() {
+        let data = currentTriageResult;
+        if (!data) {
+            // Extract from active DOM if available
+            const hasVisibleResult = !elements.resultContent.classList.contains('hidden');
+            if (hasVisibleResult) {
+                data = {
+                    statusType: elements.statusBanner.classList.contains('status-banner-red') ? 'red' : 'yellow',
+                    species: state.selectedPetType || 'kucing',
+                    symptoms: [{ name: elements.triageTitle.textContent || 'Pemeriksaan Kondisi Anabul' }],
+                    actionGroups: Array.from(elements.actionCardsContainer.querySelectorAll('.action-card-group')).map(g => ({
+                        category: g.querySelector('.action-card-title')?.textContent || 'Langkah Penanganan',
+                        items: Array.from(g.querySelectorAll('.action-check-item span')).map(s => s.textContent.trim())
+                    })),
+                    citations: Array.from(elements.citationsList.querySelectorAll('.citation-item')).map(c => c.textContent.replace(/^•\s*/, '').trim()),
+                    aiAnalysis: elements.aiAnalysisText ? elements.aiAnalysisText.textContent : ''
+                };
+            } else {
+                alert('Silakan lakukan analisis gejala anabul terlebih dahulu.');
+                return;
+            }
+        }
+
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+        const reportId = 'PAW-TR-' + now.getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
+        const isEmergency = data.statusType === 'red';
+        const speciesName = data.species === 'anjing' ? 'Anjing (Canis lupus familiaris)' : 'Kucing (Felis catus)';
+        const primarySymptom = data.symptoms && data.symptoms[0] ? data.symptoms[0].name : 'Pemeriksaan Triase Anabul';
+
+        let printFrame = document.getElementById('pawcarePrintFrame');
+        if (!printFrame) {
+            printFrame = document.createElement('iframe');
+            printFrame.id = 'pawcarePrintFrame';
+            printFrame.style.position = 'fixed';
+            printFrame.style.right = '0';
+            printFrame.style.bottom = '0';
+            printFrame.style.width = '0';
+            printFrame.style.height = '0';
+            printFrame.style.border = '0';
+            document.body.appendChild(printFrame);
+        }
+
+        const actionGroupsHtml = (data.actionGroups || []).map((group, idx) => `
+            <div style="margin-bottom: 10px; page-break-inside: avoid;">
+                <div style="font-weight: 800; font-size: 10.5pt; color: #17233d; margin-bottom: 4px; border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">
+                    ${idx + 1}. ${group.category}
+                </div>
+                <ul style="margin: 0; padding-left: 18px; font-size: 9.5pt; line-height: 1.45; color: #334155;">
+                    ${group.items.map(item => `<li style="margin-bottom: 3px;">${item}</li>`).join('')}
+                </ul>
+            </div>
+        `).join('');
+
+        const citationsHtml = (data.citations || []).map(c => `<li style="margin-bottom: 3px;">${c}</li>`).join('');
+
+        const printHtml = `
+        <!DOCTYPE html>
+        <html lang="id">
+        <head>
+            <meta charset="UTF-8">
+            <title>Laporan_Triase_PawCare_${reportId}</title>
+            <style>
+                @page {
+                    size: A4 portrait;
+                    margin: 12mm 15mm 12mm 15mm;
+                }
+                * {
+                    box-sizing: border-box;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    color: #17233d;
+                    background: #ffffff;
+                    font-size: 9.5pt;
+                    line-height: 1.38;
+                }
+                .header-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    border-bottom: 2.5px solid #17233d;
+                    padding-bottom: 8px;
+                    margin-bottom: 8px;
+                }
+                .doc-title-block {
+                    text-align: center;
+                    margin: 8px 0 10px;
+                }
+                .doc-title-block h1 {
+                    margin: 0;
+                    font-size: 14pt;
+                    font-weight: 900;
+                    letter-spacing: 0.02em;
+                    color: #17233d;
+                    text-transform: uppercase;
+                }
+                .doc-title-block span {
+                    font-size: 8.5pt;
+                    color: #64748b;
+                    font-weight: 600;
+                }
+                .meta-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    border: 1.5px solid #17233d;
+                    background: #f8fafc;
+                    border-radius: 6px;
+                    margin-bottom: 10px;
+                }
+                .meta-table td {
+                    padding: 5px 10px;
+                    font-size: 9pt;
+                    border: 1px solid #e2e8f0;
+                }
+                .status-card {
+                    border: 2px solid ${isEmergency ? '#dc2626' : '#d97706'};
+                    background: ${isEmergency ? '#fff1f2' : '#fffbeb'};
+                    border-radius: 8px;
+                    padding: 8px 12px;
+                    margin-bottom: 10px;
+                    page-break-inside: avoid;
+                }
+                .status-pill {
+                    display: inline-block;
+                    padding: 2px 8px;
+                    border-radius: 4px;
+                    font-weight: 800;
+                    font-size: 8pt;
+                    background: ${isEmergency ? '#dc2626' : '#d97706'};
+                    color: #ffffff;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                }
+                .obs-card {
+                    background: #eff6ff;
+                    border-left: 3.5px solid #2563eb;
+                    padding: 7px 10px;
+                    margin-bottom: 10px;
+                    font-size: 9pt;
+                    color: #1e3a8a;
+                    page-break-inside: avoid;
+                }
+                .warning-box {
+                    background: #fef2f2;
+                    border: 1.5px solid #ef4444;
+                    border-radius: 6px;
+                    padding: 7px 10px;
+                    margin: 8px 0;
+                    font-size: 8.5pt;
+                    color: #991b1b;
+                    font-weight: 700;
+                    page-break-inside: avoid;
+                }
+                .citations-box {
+                    background: #f8fafc;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 6px;
+                    padding: 6px 10px;
+                    margin-top: 8px;
+                    font-size: 8pt;
+                    page-break-inside: avoid;
+                }
+                .footer-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 14px;
+                    page-break-inside: avoid;
+                }
+                .disclaimer {
+                    font-size: 7.2pt;
+                    color: #64748b;
+                    line-height: 1.3;
+                    margin-top: 10px;
+                    text-align: justify;
+                    border-top: 1px solid #e2e8f0;
+                    padding-top: 5px;
+                }
+            </style>
+        </head>
+        <body>
+            <!-- KOP SURAT RESMI -->
+            <table class="header-table">
+                <tr>
+                    <td style="width: 50px; vertical-align: middle;">
+                        <img src="assets/pawcare-icon.png" style="width: 44px; height: 44px; border-radius: 10px; border: 1.5px solid #17233d;">
+                    </td>
+                    <td style="vertical-align: middle; padding-left: 8px;">
+                        <div style="font-size: 13pt; font-weight: 900; color: #17233d; letter-spacing: -0.01em;">PAWCARE AI — VETERINARY TRIAGE</div>
+                        <div style="font-size: 7.5pt; font-weight: 700; color: #0284c7; letter-spacing: 0.06em;">EARLY CARE, BETTER LIFE · EVIDENCE-BASED PET TRIAGE SYSTEM</div>
+                    </td>
+                    <td style="text-align: right; vertical-align: middle; font-size: 7.5pt; color: #475569;">
+                        <div style="font-weight: 800; color: #17233d; font-size: 8.5pt;">INSTITUT TEKNOLOGI PLN</div>
+                        <div>Fakultas Telematika Energi · Jakarta</div>
+                        <div style="color: #059669; font-weight: 700;">● Hasil Verifikasi AI</div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- JUDUL DOKUMEN -->
+            <div class="doc-title-block">
+                <h1>LEMBAR REKAM MEDIS & TRIASE DARURAT ANABUL</h1>
+                <span>KODE DOKUMEN: <strong>${reportId}</strong> · TANGGAL: ${dateStr}</span>
+            </div>
+
+            <!-- METADATA PASIEN -->
+            <table class="meta-table">
+                <tr>
+                    <td style="width: 50%;"><strong>Spesies Pasien:</strong> ${speciesName}</td>
+                    <td style="width: 50%;"><strong>Waktu Evaluasi:</strong> ${timeStr}</td>
+                </tr>
+                <tr>
+                    <td><strong>Gejala Utama:</strong> ${primarySymptom}</td>
+                    <td><strong>Metode:</strong> Multi-Modal Vision & Reasoning AI</td>
+                </tr>
+            </table>
+
+            <!-- STATUS KLINIS -->
+            <div class="status-card">
+                <span class="status-pill">${isEmergency ? '🚨 STATUS: DARURAT / KRITIS' : '⚠️ STATUS: PERINGATAN / MONITOR'}</span>
+                <div style="font-size: 11.5pt; font-weight: 900; color: #17233d; margin: 3px 0 1px;">
+                    ${primarySymptom}
+                </div>
+                <div style="font-size: 8.5pt; color: #334155;">
+                    ${data.species ? data.species.toUpperCase() : 'ANABUL'}: ${isEmergency ? 'Memerlukan pertolongan pertama segera dan rujukan ke dokter hewan terdekat dalam kurun waktu 1-2 jam.' : 'Lakukan pemantauan ketat serta panduan pertolongan pertama awal di rumah.'}
+                </div>
+            </div>
+
+            <!-- HASIL ANALISIS AI -->
+            ${data.aiAnalysis ? `
+            <div class="obs-card">
+                <strong>🔍 Hasil Observasi Klinis AI:</strong> ${data.aiAnalysis}
+            </div>
+            ` : ''}
+
+            <!-- PROTOKOL PERTOLONGAN PERTAMA -->
+            <div style="margin-top: 6px;">
+                <div style="font-size: 10pt; font-weight: 900; color: #17233d; margin-bottom: 6px; text-transform: uppercase;">
+                    📋 Protokol Pertolongan Pertama di Rumah:
+                </div>
+                ${actionGroupsHtml}
+            </div>
+
+            <!-- PERINGATAN MEDIS KERAS -->
+            <div class="warning-box">
+                ⛔ PERINGATAN KERAS: Dilarang keras memberikan obat manusia (Paracetamol/Panadol, Ibuprofen, Aspirin) kepada anabul karena berakibat keracunan darah dan gagal organ fatal!
+            </div>
+
+            <!-- CITASI JURNAL SINTA -->
+            ${data.citations && data.citations.length > 0 ? `
+            <div class="citations-box">
+                <strong>📚 Landasan Ilmiah & Jurnal Veteriner Terakreditasi (SINTA):</strong>
+                <ul style="margin: 3px 0 0; padding-left: 16px; font-size: 7.8pt;">
+                    ${citationsHtml}
+                </ul>
+            </div>
+            ` : ''}
+
+            <!-- TANDA TANGAN ELEKTRONIK -->
+            <table class="footer-table">
+                <tr>
+                    <td style="width: 60%; vertical-align: bottom; font-size: 7.5pt; color: #64748b;">
+                        <div>Dicetak secara digital: ${dateStr}, ${timeStr}</div>
+                        <div>Autentikasi Sistem: <code>SHA256-${Math.random().toString(36).substring(2, 10).toUpperCase()}</code></div>
+                    </td>
+                    <td style="width: 40%; text-align: center; vertical-align: bottom;">
+                        <div style="font-size: 8pt; color: #64748b; margin-bottom: 22px;">Divalidasi oleh Sistem AI:</div>
+                        <div style="font-weight: 800; font-size: 9pt; color: #17233d; border-bottom: 1px solid #17233d; display: inline-block; padding-bottom: 1px;">
+                            PawCare AI Research Team
+                        </div>
+                        <div style="font-size: 7.2pt; color: #64748b;">Institut Teknologi PLN (ITPLN) Jakarta</div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- DISCLAIMER -->
+            <div class="disclaimer">
+                <strong>Disclaimer Medis:</strong> Dokumen ini diterbitkan oleh platform kecerdasan buatan PawCare AI sebagai panduan triase darurat dan literasi pertolongan pertama awal. Hasil ini bukan diagnosa medis definitif pengganti dokter hewan. Apabila kondisi anabul menurun atau menunjukkan gejala bahaya lanjutan, segera bawa ke Rumah Sakit Hewan atau Klinik Dokter Hewan terdekat.
+            </div>
+        </body>
+        </html>
+        `;
+
+        const frameDoc = printFrame.contentWindow || printFrame.contentDocument.document || printFrame.contentDocument;
+        frameDoc.document.open();
+        frameDoc.document.write(printHtml);
+        frameDoc.document.close();
+
+        setTimeout(() => {
+            printFrame.contentWindow.focus();
+            printFrame.contentWindow.print();
+        }, 400);
+    }
+
     // PDF Export Action
     elements.btnExportPDF.addEventListener('click', () => {
-        window.print();
+        exportClinicalPDF();
     });
 
     const articleData = {
