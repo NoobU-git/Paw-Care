@@ -36,44 +36,46 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Custom Stylesheet with Cache-Buster v11.0.0 (Modern Redesign) -->
-    <link rel="stylesheet" href="styles.css?v=11.0.0">
+    <!-- Custom Stylesheet with Cache-Buster v18.0.0 -->
+    <link rel="stylesheet" href="styles.css?v=18.0.0">
+    <link rel="stylesheet" href="ui-overrides.css?v=18.0.0">
 </head>
 <body>
 
-    <!-- Ambient Floating Decorations -->
-    <div class="floating-deco-container">
-        <!-- Paw Prints -->
-        <i data-lucide="paw-print" class="floating-deco deco-paw"></i>
-        <i data-lucide="paw-print" class="floating-deco deco-paw"></i>
-        <i data-lucide="paw-print" class="floating-deco deco-paw"></i>
+    <!-- Ambient Floating Decorations (Dynamic & Pastel Accents) -->
+    <div class="floating-deco-container" id="floatingDecoContainer">
+        <!-- Cute Floating Paws -->
+        <i data-lucide="paw-print" class="floating-deco deco-paw deco-pink deco-p1"></i>
+        <i data-lucide="paw-print" class="floating-deco deco-paw deco-yellow deco-p2"></i>
+        <i data-lucide="paw-print" class="floating-deco deco-paw deco-mint deco-p3"></i>
+        <i data-lucide="paw-print" class="floating-deco deco-paw deco-purple deco-p4"></i>
         
-        <!-- Medical / Veterinary Accents -->
-        <i data-lucide="heart-pulse" class="floating-deco deco-medical"></i>
-        <i data-lucide="stethoscope" class="floating-deco deco-medical"></i>
-        <i data-lucide="plus" class="floating-deco deco-medical"></i>
+        <!-- Wholesome Accents -->
+        <i data-lucide="heart" class="floating-deco deco-shape deco-pink deco-h1"></i>
+        <i data-lucide="sparkles" class="floating-deco deco-shape deco-yellow deco-s1"></i>
+        <i data-lucide="plus" class="floating-deco deco-shape deco-mint deco-c1"></i>
+        <i data-lucide="heart-pulse" class="floating-deco deco-shape deco-coral deco-hp1"></i>
+        <i data-lucide="sparkles" class="floating-deco deco-shape deco-purple deco-s2"></i>
     </div>
 
     <!-- Top Navigation Bar -->
     <header class="top-nav">
         <div class="nav-container">
-            <a href="#" class="brand-logo">
-                <div class="brand-icon">
-                    <i data-lucide="shield-alert"></i>
+            <a href="#home" class="brand-logo" aria-label="PawCare AI - Beranda" style="display:inline-flex; align-items:center; gap:10px; text-decoration:none;">
+                <div class="brand-icon" style="width:40px; height:40px; min-width:40px; border-radius:12px; border:2px solid #17233D; box-shadow:2.5px 2.5px 0 #17233D; background:#FFE5EC; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <img src="assets/pawcare-icon.png" alt="PawCare AI Logo" style="width:100%; height:100%; object-fit:cover; display:block;">
                 </div>
-                <div class="brand-title">
-                    PawCare <span>AI v2.0</span>
+                <div class="brand-title" style="display:flex; flex-direction:column; line-height:1.15; font-weight:800; color:#17233D; font-size:1.18rem;">
+                    PawCare <span style="font-size:0.65rem; font-weight:700; color:#6B7280;">AI v2.0</span>
                 </div>
             </a>
 
-            <nav class="nav-links">
-                <a href="#workspace" class="btn-brutalist btn-brutalist-emergency">
-                    <i data-lucide="activity"></i> Triase Darurat
-                </a>
-                <button type="button" class="btn-brutalist" id="btnOpenVetNav">
-                    <i data-lucide="map-pin"></i> Vet 24 Jam
-                </button>
+            <nav class="nav-links" aria-label="Navigasi utama">
+                <a href="#home" class="nav-box" data-nav-view="home"><i data-lucide="home"></i> Beranda</a>
+                <a href="#literasi" class="nav-box" data-nav-view="literasi"><i data-lucide="book-open"></i> Literasi</a>
+                <a href="#about" class="nav-box" data-nav-view="about"><i data-lucide="info"></i> About</a>
+                <a href="#workspace" class="nav-box" data-nav-view="workspace"><i data-lucide="sparkles"></i> AI Triase</a>
+                <button type="button" class="nav-box" id="btnOpenVetNav"><i data-lucide="map-pin"></i> Cari Vet Terdekat</button>
             </nav>
         </div>
     </header>
@@ -82,14 +84,14 @@
     <main class="page-container">
 
         <!-- SECTION 1: HERO LANDING (The Hook) -->
-        <section class="hero-section reveal-on-scroll">
+        <section class="hero-section reveal-on-scroll" data-view="home">
             <div class="hero-content">
                 <div class="badge-mono">
                     <i data-lucide="award"></i> EVIDENCE-BASED VETERINARY AI
                 </div>
                 
                 <h1 class="hero-headline">
-                    Pertolongan Pertama Darurat Anabul.
+                    Pertolongan Pertama<br><span class="headline-highlight">Darurat Anabul.</span>
                 </h1>
                 
                 <p class="hero-subheadline">
@@ -101,7 +103,7 @@
                         <i data-lucide="sparkles"></i> Mulai Analisis Darurat
                     </a>
                     <button type="button" class="btn-brutalist" id="btnHeroVet">
-                        <i data-lucide="map-pin"></i> Cari Vet 24 Jam
+                        <i data-lucide="map-pin"></i> Cari Vet Terdekat
                     </button>
                 </div>
 
@@ -121,12 +123,94 @@
                     </div>
                 </div>
             </div>
+            <div class="hero-visual" aria-label="Anabul sehat bersama dokter hewan">
+                <div class="hero-glow"></div>
+                <img src="assets/hero-banner-image.jpg" alt="Ilustrasi dokter hewan bersama anjing dan kucing lucu" loading="eager">
+                <div class="hero-note hero-note-top"><i data-lucide="heart-pulse"></i><span>Care starts here</span></div>
+                <div class="hero-note hero-note-bottom"><i data-lucide="shield-check"></i><span>Panduan aman & praktis</span></div>
+            </div>
+        </section>
+
+        <section class="home-menu-grid" data-view="home" aria-label="Pintu PawCare">
+            <button class="home-menu-card menu-triage" data-go-view="workspace"><span class="menu-card-icon">✦</span><strong>AI Triase</strong><small>Periksa kondisi anabul</small><b>Mulai cek →</b></button>
+            <button class="home-menu-card menu-literasi" data-go-view="literasi"><span class="menu-card-icon">✚</span><strong>Literasi Anabul</strong><small>Kenali tanda dan langkah aman</small><b>Baca panduan →</b></button>
+            <button class="home-menu-card menu-about" data-go-view="about"><span class="menu-card-icon">♥</span><strong>Tentang PawCare</strong><small>Kenali misi dan cara kerja kami</small><b>Kenali kami →</b></button>
+        </section>
+
+        <!-- QUICK LITERACY PREVIEW ON BERANDA -->
+        <section class="home-quick-literacy reveal-on-scroll" data-view="home" aria-label="Edukasi Cepat Anabul">
+            <div class="section-header" style="text-align:center; margin-bottom:20px;">
+                <div class="badge-mono"><i data-lucide="book-open"></i> PERTOLONGAN PERTAMA POPULER</div>
+                <h2 style="font-size:clamp(1.5rem, 3.2vw, 2.2rem);">Kenali Gejala Sebelum Panik</h2>
+                <p class="section-lead" style="margin:6px auto 0; font-size:0.95rem;">Panduan darurat singkat yang paling sering dialami anabul di rumah.</p>
+            </div>
+            <div class="literacy-grid" style="margin-bottom:20px;">
+                <button type="button" class="literacy-card" data-article="jamur" style="background:#fff0d0;">
+                    <span class="literacy-kicker">🐱 KUCING</span>
+                    <h3>Jamur Kulit & Ringworm</h3>
+                    <p>Kenali risiko penularan, tanda pitak melingkar, dan cara isolasi aman di rumah.</p>
+                    <b>Baca Panduan →</b>
+                </button>
+                <button type="button" class="literacy-card" data-article="muntah" style="background:#e8f8ff;">
+                    <span class="literacy-kicker">🤮 PENCERNAAN</span>
+                    <h3>Muntah Makanan & Gastritis</h3>
+                    <p>Langkah puasa makan 6-8 jam dan pertolongan rehidrasi oral sebelum ke vet.</p>
+                    <b>Baca Panduan →</b>
+                </button>
+                <button type="button" class="literacy-card" data-article="napas" style="background:#ffe0dc;">
+                    <span class="literacy-kicker">🚨 DARURAT KRITIS</span>
+                    <h3>Napas Cepat / Mulut Terbuka</h3>
+                    <p>Tanda bahaya distress pernapasan yang wajib segera ditangani dokter hewan.</p>
+                    <b>Baca Panduan →</b>
+                </button>
+            </div>
+            <div style="text-align:center; margin-bottom:36px;">
+                <a href="#literasi" class="btn-brutalist" style="font-size:0.9rem; padding:10px 22px;" data-go-view="literasi">
+                    <i data-lucide="arrow-right"></i> Buka Perpustakaan Literasi Lengkap
+                </a>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <section class="care-path-section reveal-on-scroll" data-view="home">
+            <div class="section-header">
+                <div class="badge-mono"><i data-lucide="compass"></i> ALUR PERTOLONGAN</div>
+                <h2>Dari Panik Jadi Punya Arah</h2>
+                <p class="section-lead">Tiga langkah sederhana untuk mengambil keputusan yang lebih tenang saat anabul menunjukkan gejala.</p>
+            </div>
+            <div class="care-path-grid">
+                <article class="care-step" style="background:#e8f8ff;">
+                    <div class="care-step-top">
+                        <span class="care-step-num">01</span>
+                        <div class="care-step-icon"><i data-lucide="camera"></i></div>
+                    </div>
+                    <h3>Amati Gejala</h3>
+                    <p>Foto bagian fisik yang bermasalah dan catat perubahan perilaku anabul secara teliti.</p>
+                </article>
+                <article class="care-step" style="background:#fff0d0;">
+                    <div class="care-step-top">
+                        <span class="care-step-num">02</span>
+                        <div class="care-step-icon"><i data-lucide="scan-search"></i></div>
+                    </div>
+                    <h3>Analisis AI</h3>
+                    <p>AI memproses ciri visual, tingkat urgensi, serta kemungkinan risiko berdasarkan jurnal SINTA.</p>
+                </article>
+                <article class="care-step" style="background:#d9faeb;">
+                    <div class="care-step-top">
+                        <span class="care-step-num">03</span>
+                        <div class="care-step-icon"><i data-lucide="phone-call"></i></div>
+                    </div>
+                    <h3>Tindakan Tepat</h3>
+                    <p>Lakukan pertolongan pertama di rumah atau segera hubungi klinik vet terdekat saat kondisi kritis.</p>
+                </article>
+            </div>
         </section>
 
         <hr class="section-divider">
 
         <!-- SECTION 2: TRUST & FEATURES (Bento Grid) -->
-        <section class="bento-grid-section reveal-on-scroll">
+        <section class="bento-grid-section reveal-on-scroll" data-view="home">
             <div class="section-header">
                 <div class="badge-mono">FITUR UNGGULAN</div>
                 <h2>Dirancang Untuk Situasi Kritis</h2>
@@ -191,8 +275,84 @@
 
         <hr class="section-divider">
 
+        <section id="literasi" class="literacy-section reveal-on-scroll" data-view="literasi">
+            <div class="section-header">
+                <div class="badge-mono">LITERASI ANABUL</div>
+                <h2>Kenali Tanda, Ambil Tindakan</h2>
+                <p class="section-lead">Panduan singkat untuk membantu kamu mengamati kondisi anabul sebelum memutuskan langkah berikutnya.</p>
+            </div>
+            <div class="literacy-grid">
+                <button class="literacy-card" data-article="jamur"><span class="literacy-kicker">PENTING</span><h3>Jamur pada kucing bisa menular ke manusia?</h3><p>Kenali risiko, tanda yang tampak, dan langkah aman di rumah.</p><b>Baca artikel →</b></button>
+                <button class="literacy-card" data-article="muntah"><span class="literacy-kicker">SEGERA CEK</span><h3>Kucing muntah sekali, bahaya atau normal?</h3><p>Yang perlu dicatat sebelum menentukan langkah berikutnya.</p><b>Baca artikel →</b></button>
+                <button class="literacy-card" data-article="napas"><span class="literacy-kicker">DARURAT</span><h3>Napas kucing cepat: tunggu atau ke dokter?</h3><p>Tanda bahaya yang tidak sebaiknya ditunda.</p><b>Baca artikel →</b></button>
+                <button class="literacy-card" data-article="makan"><span class="literacy-kicker">PERHATIKAN</span><h3>Anjing tidak mau makan: kapan khawatir?</h3><p>Amati perilaku, minum, dan gejala penyerta.</p><b>Baca artikel →</b></button>
+                <button class="literacy-card" data-article="diare"><span class="literacy-kicker">PERHATIKAN</span><h3>Diare pada anjing: apa yang perlu diamati?</h3><p>Frekuensi, warna, dan kondisi tubuh memberi petunjuk awal.</p><b>Baca artikel →</b></button>
+                <button class="literacy-card" data-article="kulit"><span class="literacy-kicker">AMATI</span><h3>Perubahan kulit pada kucing dan anjing</h3><p>Foto dengan cahaya cukup dan hindari obat manusia.</p><b>Baca artikel →</b></button>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
+        <section id="about" class="about-section-container reveal-on-scroll" data-view="about">
+            <div class="section-header" style="text-align:center; margin-bottom:32px;">
+                <div class="badge-mono"><i data-lucide="info"></i> TENTANG PAWCARE AI</div>
+                <h2 style="font-size:clamp(1.8rem, 3.5vw, 2.6rem);">Early Care, Better Life.</h2>
+                <p class="section-lead" style="margin:8px auto 0;">Inovasi triase medis anabul berbasis kecerdasan buatan multi-modal dan literasi ilmiah veteriner terakreditasi.</p>
+            </div>
+
+            <!-- Brand Vision Card -->
+            <div class="about-hero-card">
+                <div class="about-hero-content">
+                    <div class="badge-mono" style="background:#ffd84d;">MISI KAMI</div>
+                    <h3>Menyelamatkan Anabul dari Penanganan yang Salah</h3>
+                    <p>Banyak pemilik anabul panik saat hewan peliharaannya sakit dan secara tidak sengaja memberikan obat manusia yang berakibat fatal (seperti Paracetamol pada kucing). <strong>PawCare AI</strong> hadir sebagai jembatan pertolongan pertama instan untuk memandu tindakan yang aman sebelum dibawa ke klinik dokter hewan.</p>
+                    <div class="about-stats-row">
+                        <div class="about-stat-pill"><strong>Multi-Modal Vision</strong><span>Deteksi foto visual gejala</span></div>
+                        <div class="about-stat-pill"><strong>SINTA Citations</strong><span>Rujukan jurnal ilmiah terpercaya</span></div>
+                        <div class="about-stat-pill"><strong>Anti-Panik Triase</strong><span>Prioritas tindakan terukur</span></div>
+                    </div>
+                </div>
+                <div class="about-hero-img-wrap">
+                    <img src="assets/pawcare-full-logo.png" alt="PawCare AI Brand Emblem" style="max-width:280px; width:100%; border-radius:18px; box-shadow:6px 6px 0 var(--navy,#17233d); border:2px solid var(--navy,#17233d); background:#fff;">
+                </div>
+            </div>
+
+            <!-- 3 Pillars Grid -->
+            <div class="about-pillars-grid">
+                <div class="about-pillar-box" style="background:#e8f8ff;">
+                    <div class="pillar-icon"><i data-lucide="brain-circuit"></i></div>
+                    <h4>AI Akinator Reasoning</h4>
+                    <p>Model agen inferensi cerdas yang mengajukan pertanyaan diferensial interaktif untuk mengonfirmasi gejala fisik secara bertahap.</p>
+                </div>
+                <div class="about-pillar-box" style="background:#fff0d0;">
+                    <div class="pillar-icon"><i data-lucide="shield-check"></i></div>
+                    <h4>Keamanan Klinis Terjamin</h4>
+                    <p>Dilengkapi sistem peringatan keras terhadap obat berbahaya manusia dan mengutamakan keselamatan anabul di atas segalanya.</p>
+                </div>
+                <div class="about-pillar-box" style="background:#d9faeb;">
+                    <div class="pillar-icon"><i data-lucide="map-pin"></i></div>
+                    <h4>GPS Rujukan Dokter Hewan</h4>
+                    <p>Integrasi langsung pencarian klinik dokter hewan 24 jam terdekat saat status triase menunjukkan kondisi kritis atau darurat.</p>
+                </div>
+            </div>
+
+            <!-- Creator & Academic Info -->
+            <div class="about-academic-card">
+                <div class="academic-badge"><i data-lucide="award"></i> PROJEK INOVASI AKADEMIK</div>
+                <h4>Dikembangkan oleh Tim Mahasiswa Institut Teknologi PLN (ITPLN)</h4>
+                <p>Karya inovasi AI & Vibe Coding karya mahasiswa <strong>Institut Teknologi PLN (ITPLN)</strong>. Didedikasikan untuk meningkatkan literasi kesehatan hewan peliharaan di Indonesia melalui teknologi kecerdasan buatan multi-modal.</p>
+                <div class="academic-tags">
+                    <span>📍 Jakarta Barat, Indonesia</span>
+                    <span>🎓 Institut Teknologi PLN (ITPLN)</span>
+                    <span>✨ Gemini Multi-Modal Vision API</span>
+                </div>
+            </div>
+        </section>
+
+        <hr class="section-divider">
+
         <!-- SECTION 3: TRIAGE WORKSPACE & DASHBOARD (Split View) -->
-        <section id="workspace" class="workspace-section reveal-on-scroll">
+        <section id="workspace" class="workspace-section reveal-on-scroll" data-view="workspace">
             <div class="section-header">
                 <div class="badge-mono">CORE TOOL</div>
                 <h2>Formulir Analisis Multi-Modal</h2>
@@ -201,19 +361,6 @@
             <div class="workspace-layout">
                 <!-- Left Column: Input Form Workspace -->
                 <div class="workspace-card">
-                    
-                    <!-- Fast-Track Demo Presets Bar -->
-                    <div class="demo-preset-bar">
-                        <div class="preset-title">
-                            <i data-lucide="zap" style="width:12px; height:12px;"></i> DEMO PRESET DEWAN JURI
-                        </div>
-                        <div class="preset-pills-row">
-                            <button type="button" class="preset-pill-btn" data-preset="cat-skin">🐱 Kucing Jamur</button>
-                            <button type="button" class="preset-pill-btn" data-preset="dog-vomit">🐶 Pug Muntah</button>
-                            <button type="button" class="preset-pill-btn" data-preset="dog-mange">🐶 Kudis Mange</button>
-                            <button type="button" class="preset-pill-btn" data-preset="mouth-pop">👄 Papiloma</button>
-                        </div>
-                    </div>
 
                     <!-- Pet Type Switches -->
                     <div class="pet-selector-group">
@@ -394,14 +541,69 @@
             </div>
         </section>
 
+        <!-- PREMIUM NEOBRUTALIST FOOTER -->
+        <footer class="site-footer">
+            <div class="footer-inner-grid">
+                <!-- Col 1: Brand & Slogan -->
+                <div class="footer-brand-col">
+                    <div class="footer-brand-header">
+                        <img src="assets/pawcare-icon.png" alt="PawCare Logo" class="footer-brand-logo">
+                        <div>
+                            <span class="footer-brand-name">PawCare AI</span>
+                            <span class="footer-brand-slogan">EARLY CARE, BETTER LIFE</span>
+                        </div>
+                    </div>
+                    <p class="footer-desc">Platform triase darurat dan literasi pertolongan pertama anabul berbasis AI Multi-Modal dengan rujukan jurnal ilmiah SINTA.</p>
+                    <div class="footer-badges">
+                        <span class="footer-badge-pill">🐾 Kucing & Anjing</span>
+                        <span class="footer-badge-pill">🛡️ Evidence-Based</span>
+                    </div>
+                </div>
+
+                <!-- Col 2: Navigasi Cepat -->
+                <div class="footer-nav-col">
+                    <h5 class="footer-col-title">Navigasi Fitur</h5>
+                    <ul class="footer-links-list">
+                        <li><a href="#home" data-go-view="home"><i data-lucide="home"></i> Beranda Utama</a></li>
+                        <li><a href="#workspace" data-go-view="workspace"><i data-lucide="sparkles"></i> AI Triase & Diagnosa</a></li>
+                        <li><a href="#literasi" data-go-view="literasi"><i data-lucide="book-open"></i> Perpustakaan Literasi</a></li>
+                        <li><a href="#about" data-go-view="about"><i data-lucide="info"></i> Tentang PawCare</a></li>
+                        <li><a href="https://www.google.com/maps/search/dokter+hewan+terdekat" target="_blank" rel="noopener"><i data-lucide="map-pin"></i> Cari Vet Terdekat (GPS)</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Edukasi & Kampus -->
+                <div class="footer-edu-col">
+                    <h5 class="footer-col-title">Pengembangan & Riset</h5>
+                    <p class="footer-desc">Dikembangkan sebagai karya inovasi teknologi cerdas oleh Tim Mahasiswa <strong>Institut Teknologi PLN (ITPLN) Jakarta</strong>.</p>
+                    <div class="footer-emergency-box">
+                        <i data-lucide="alert-triangle"></i>
+                        <span>Dalam kondisi darurat kritis, selalu utamakan membawa anabul ke klinik hewan terdekat.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom Line -->
+            <div class="footer-bottom-bar">
+                <p>© 2026 <strong>PawCare AI</strong> · Institut Teknologi PLN (ITPLN). All rights reserved.</p>
+                <div class="footer-disclaimer-pill">
+                    <i data-lucide="shield-alert"></i>
+                    <span><strong>Perhatian:</strong> Panduan triase awal & edukasi, bukan pengganti dokter hewan.</span>
+                </div>
+            </div>
+        </footer>
+
     </main>
 
     <!-- Emergency Vet GPS Bottom Sheet Modal -->
-    <div class="modal-overlay hidden" id="vetBottomSheet">
+    <div class="modal-overlay hidden" id="articleModal" role="dialog" aria-modal="true" aria-labelledby="articleModalTitle">
+        <div class="modal-bottom-sheet article-modal-card"><div class="modal-header"><h3 id="articleModalTitle">Artikel</h3><button type="button" class="btn-brutalist" data-close-modal="articleModal" aria-label="Tutup artikel"><i data-lucide="x"></i></button></div><div id="articleModalBody"></div></div>
+    </div>
+    <div class="modal-overlay hidden" id="vetBottomSheet" role="dialog" aria-modal="true" aria-labelledby="vetModalTitle">
         <div class="modal-bottom-sheet">
             <div class="modal-header">
-                <h3 style="font-size:20px;">
-                    <i data-lucide="map-pin" style="color:var(--red-emergency);"></i> Klinik Vet 24 Jam Terdekat
+                <h3 id="vetModalTitle" style="font-size:20px;">
+                                    <i data-lucide="map-pin" style="color:var(--red-emergency);"></i> Cari Vet Terdekat
                 </h3>
                 <button type="button" class="btn-brutalist" id="btnCloseVetModal" style="padding:4px 8px;">
                     <i data-lucide="x"></i>
@@ -412,18 +614,15 @@
     </div>
 
     <!-- Mobile Bottom Navigation Bar Sticky -->
-    <nav class="mobile-bottom-nav">
-        <a href="#workspace" class="mobile-nav-btn active">
-            <i data-lucide="sparkles"></i>
-            <span>Triase</span>
-        </a>
-        <button type="button" class="mobile-nav-btn" id="btnMobileVet">
-            <i data-lucide="map-pin"></i>
-            <span>Vet 24h</span>
-        </button>
+    <nav class="mobile-bottom-nav" aria-label="Navigasi mobile">
+        <a href="#home" class="mobile-nav-btn" data-nav-view="home"><i data-lucide="home"></i><span>Home</span></a>
+        <a href="#literasi" class="mobile-nav-btn" data-nav-view="literasi"><i data-lucide="book-open"></i><span>Baca</span></a>
+        <a href="#workspace" class="mobile-nav-btn" data-nav-view="workspace"><i data-lucide="sparkles"></i><span>Triase</span></a>
+        <button type="button" class="mobile-nav-btn" id="btnMobileVet"><i data-lucide="map-pin"></i><span>Vet</span></button>
+        <a href="#about" class="mobile-nav-btn" data-nav-view="about"><i data-lucide="info"></i><span>About</span></a>
     </nav>
 
-    <!-- App Script with Cache-Buster v11.0.0 -->
-    <script src="app.js?v=11.0.0"></script>
+    <!-- App Script with Cache-Buster v17.0.0 -->
+    <script src="app.js?v=17.0.0"></script>
 </body>
 </html>

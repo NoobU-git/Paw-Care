@@ -1,2 +1,12 @@
-# Local Netlify folder
+# Environment Variables & Secrets (CRITICAL SECURITY)
+.env
+.env.*
+*.env
+*.pem
+*.key
+
+# Local Netlify & Build Folders
 .netlify
+node_modules
+.DS_Store
+Thumbs.db

@@ -14,7 +14,7 @@
    - Tambahkan: GEMINI_API_KEY = <API key dari Google AI Studio>
    ========================================================================== */
 
-const GEMINI_MODEL = "gemini-1.5-flash";
+const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 // Batas jumlah foto yang dikirim ke Gemini per request (jaga payload & kuota)
@@ -60,25 +60,40 @@ exports.handler = async function (event) {
       const photos = Array.isArray(payload.photos) ? payload.photos : [];
       const history = Array.isArray(payload.history) ? payload.history : [];
 
-      const systemPrompt = `Kamu adalah dokter hewan berpengalaman yang sedang melakukan diagnosis interaktif seperti permainan Akinator. Tugasmu adalah mengajukan pertanyaan klinis satu per satu untuk mempersempit kemungkinan penyakit hewan.
+      const systemPrompt = `Kamu adalah dokter hewan berpengalaman yang sedang melakukan diagnosis interaktif seperti permainan Akinator. Tugasmu adalah mengajukan pertanyaan klinis satu per satu untuk mempersempit kemungkinan diagnosis anabul (Kucing / Anjing).
 
-Jenis hewan: ${petType}
+Jenis hewan yang dipilih user: ${petType}
 Keluhan pemilik: "${input}"
 
-Aturan:
-1. Ajukan SATU pertanyaan klinis dalam Bahasa Indonesia yang sederhana dan bisa dijawab dengan Ya/Tidak/Tidak Tahu.
-2. Pertanyaan harus mulai dari yang umum (area tubuh mana yang bermasalah?) lalu semakin spesifik.
-3. Evaluasi semua jawaban sebelumnya untuk mempersempit kemungkinan.
+ATURAN WAJIB & SANGAT PENTING:
+1. DETEKSI SPESIES OTOMATIS: Amati foto atau teks gejala. Apakah ini Kucing, Anjing, atau Hewan Lain / Objek acak?
+   - Kembalikan field 'detectedSpecies': "kucing" | "anjing" | "lainnya".
+   - Jika foto jelas-jelas Anjing padahal user pilih Kucing (atau sebaliknya), gunakan spesies yang ada di FOTO untuk diagnosis dan set detectedSpecies sesuai foto.
+   - Jika terdeteksi bukan kucing/anjing (misal kelinci, burung, reptil, benda acak), kembalikan type: "unsupported" dengan pesan ramah bahwa PawCare fokus pada Kucing & Anjing.
+2. ATURAN PENULISAN PERTANYAAN KLINIS (SANGAT KETAT):
+   - Tombol jawaban user HANYA ADA TIGA: [Ya], [Tidak], dan [Tidak Yakin].
+   - DILARANG KERAS membuat pertanyaan dengan kata "atau" / pilihan ganda / membingungkan (Contoh DILARANG: "Apakah muntah sekali atau berulang kali?", "Apakah muntah makanan atau cairan empedu?", "Apakah diare atau sembelit?").
+   - Pertanyaan WAJIB berupa SATU PERNYATAAN KONDISI TUNGGAL yang pasti dan hanya bisa dijawab "Ya" atau "Tidak".
+   - CONTOH PERTANYAAN YANG BENAR (Ya / Tidak):
+     * "Apakah anabul muntah berulang kali (lebih dari 1 kali) dalam 24 jam terakhir?" (Ya = berulang, Tidak = hanya 1 kali)
+     * "Apakah cairan muntahan berwarna kuning atau kehijauan (cairan empedu)?" (Ya = empedu, Tidak = makanan/bening)
+     * "Apakah anabul terlihat sangat lemas dan menolak makan sama sekali?" (Ya / Tidak)
+     * "Apakah ada luka terbuka, darah, atau keropeng tebal pada area kulit tersebut?" (Ya / Tidak)
+     * "Apakah anabul sering menggaruk atau menggigit area yang bermasalah tersebut?" (Ya / Tidak)
+3. Evaluasi semua jawaban sebelumnya secara logis untuk mempersempit kemungkinan penyakit.
 4. Berikan confidence score (0-100) seberapa yakin kamu sudah bisa mendiagnosis.
-5. Jika confidence >= 92%, berikan diagnosis akhir alih-alih pertanyaan baru.
+5. Jika confidence >= 90% atau sudah mencapai 3-4 pertanyaan, langsung berikan diagnosis akhir alih-alih bertanya terus.
 
 BALAS DALAM FORMAT JSON SAJA (tanpa markdown code block), dengan salah satu struktur berikut:
 
 Jika masih butuh pertanyaan:
-{"type":"question","confidence":45,"question":"Apakah ada bulu yang rontok di sekitar area bermasalah?","possibleConditions":["Ringworm","Mange","Alergi"]}
+{"type":"question","detectedSpecies":"kucing","confidence":45,"question":"Apakah ada kerontokan bulu melingkar (kebotakan) pada area kulit tersebut?","possibleConditions":["Ringworm (Jamur)","Mange (Kudis)","Alergi Dermatitis"]}
 
-Jika sudah yakin (confidence >= 92%):
-{"type":"diagnosis","confidence":95,"diseases":[{"name":"Oral Papillomatosis","severity":"sedang","description":"Kutil virus pada mulut yang umum pada anjing muda","treatments":["Bilas mulut dengan Chlorhexidine 0.12%","Berikan makanan lunak (wet food)","Monitor 2-4 minggu, biasanya hilang sendiri"],"urgency":"kuning","citation":"Merck Veterinary Manual 2024: Canine Oral Papillomatosis"}]}`;
+Jika sudah yakin (confidence >= 90%):
+{"type":"diagnosis","detectedSpecies":"anjing","confidence":95,"diseases":[{"name":"Oral Papillomatosis","severity":"sedang","description":"Kutil virus pada mukosa mulut yang umum terjadi pada anjing muda","treatments":["Bilas rongga mulut dengan larutan Chlorhexidine 0.12% khusus hewan","Berikan makanan bertekstur lunak (wet food) agar tidak mengiritasi kutil","Monitor perkembangan dalam 2-4 minggu, segera ke dokter hewan jika bertambah besar"],"urgency":"kuning","citation":"Merck Veterinary Manual 2024: Canine Oral Papillomatosis"}]}
+
+Jika foto bukan kucing/anjing:
+{"type":"unsupported","detectedSpecies":"lainnya","message":"PawCare saat ini dioptimalkan khusus untuk Kucing & Anjing. Silakan unggah foto anabulmu untuk hasil triase yang presisi."}`;
 
       const contents = [];
 
