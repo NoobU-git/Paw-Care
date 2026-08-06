@@ -1,9 +1,11 @@
 # PawCare AI 🐾
 > **Deteksi Dini & Pertolongan Pertama Kesehatan Anabul Berbasis Multi-Modal AI**
+> 
+> 🌐 **Live Demo Website:** [https://pawcare-id.netlify.app](https://pawcare-id.netlify.app)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Vibe Coding](https://img.shields.io/badge/Vibe%20Coding-Bitsmikro%202026-emerald.svg)](#)
-[![Deployment](https://img.shields.io/badge/Deployment-Vercel-black.svg)](#)
+[![Deployment](https://img.shields.io/badge/Deployment-Netlify-00C7B7.svg)](https://pawcare-id.netlify.app)
 
 ---
 
