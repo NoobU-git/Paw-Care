@@ -453,37 +453,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const photoNames = (photos || []).map(p => (typeof p === 'string' ? p : (p.name || ''))).join(' ').toLowerCase();
         const combined = textLower + ' ' + photoNames;
 
-        const isVomit = combined.includes('muntah') || combined.includes('diare') || combined.includes('lambung') || combined.includes('makan') || combined.includes('kibble');
-        const isMouth = combined.includes('mulut') || combined.includes('gusi') || combined.includes('kutil') || combined.includes('benjolan') || combined.includes('papiloma');
-        const isSkin = combined.includes('kulit') || combined.includes('jamur') || combined.includes('botak') || combined.includes('kudis') || combined.includes('gatal') || combined.includes('ringworm') || combined.includes('mange') || combined.includes('ruam') || combined.includes('luka');
+        const isLethargy = combined.includes('lemas') || combined.includes('lemah') || combined.includes('lesu') || combined.includes('infus') || combined.includes('tidur') || combined.includes('makan') || combined.includes('minum') || combined.includes('demam') || combined.includes('panas') || combined.includes('pucat') || combined.includes('kurus');
+        const isVomit = state.selectedFocus === 'muntah' || combined.includes('muntah') || combined.includes('diare') || combined.includes('lambung') || combined.includes('kibble') || combined.includes('mencret') || combined.includes('racun');
+        const isMouth = state.selectedFocus === 'papiloma' || combined.includes('mulut') || combined.includes('gusi') || combined.includes('kutil') || combined.includes('benjolan') || combined.includes('papiloma') || combined.includes('liur') || combined.includes('stomatitis');
+        const isRespiratory = combined.includes('flu') || combined.includes('pilek') || combined.includes('bersin') || combined.includes('batuk') || combined.includes('mata') || combined.includes('belek') || combined.includes('ingus') || combined.includes('sesak') || combined.includes('napas');
+        const isSkin = state.selectedFocus === 'kulit' || combined.includes('kulit') || combined.includes('jamur') || combined.includes('botak') || combined.includes('kudis') || combined.includes('gatal') || combined.includes('ringworm') || combined.includes('mange') || combined.includes('ruam') || combined.includes('luka') || combined.includes('kutu');
 
         const step = history.length;
 
-        // Path 1: Pencernaan / Muntah / Gastritis / Hairball
+        // Path 1: Muntah / Diare / Pencernaan
         if (isVomit) {
             if (step === 0) {
                 return {
                     type: "question",
                     detectedSpecies: petType,
-                    confidence: 42,
+                    confidence: 45,
                     question: "Apakah anabul muntah berulang kali (lebih dari 1 kali) dalam 24 jam terakhir?",
-                    possibleConditions: ["Gastritis Akut", "Trichobezoar (Hairball)", "Keracunan Pakan", "Enteritis"]
+                    possibleConditions: ["Gastritis Akut", "Trichobezoar (Hairball)", "Keracunan Pakan", "Gastroenteritis"]
                 };
             } else if (step === 1) {
                 return {
                     type: "question",
                     detectedSpecies: petType,
-                    confidence: 68,
-                    question: "Apakah cairan muntahan disertai busa putih atau gumpalan bulu padat?",
-                    possibleConditions: ["Trichobezoar (Muntah Bulu)", "Gastritis Akut"]
+                    confidence: 70,
+                    question: "Apakah cairan muntahan disertai busa putih, lendir kental, atau gumpalan bulu padat?",
+                    possibleConditions: ["Trichobezoar (Muntah Bulu)", "Gastritis Akut", "Iritasi Saluran Cerna"]
                 };
             } else if (step === 2) {
                 return {
                     type: "question",
                     detectedSpecies: petType,
-                    confidence: 88,
-                    question: "Apakah anabul tampak lemas dan menolak minum air sama sekali?",
-                    possibleConditions: ["Gastritis Akut", "Dehidrasi Klinis"]
+                    confidence: 90,
+                    question: "Apakah anabul tampak sangat lemas dan menolak makan/minum sama sekali?",
+                    possibleConditions: ["Gastritis Akut", "Dehidrasi Klinis Sedang"]
                 };
             } else {
                 const hadHairball = history.some(h => (h.question || '').includes('bulu') && h.answer === 'ya');
@@ -528,15 +530,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Path 2: Area Mulut & Gusi / Papiloma
+        // Path 2: Area Mulut & Gusi / Papiloma / Stomatitis
         if (isMouth) {
             if (step === 0) {
                 return {
                     type: "question",
                     detectedSpecies: petType,
                     confidence: 45,
-                    question: "Apakah benjolan di mulut menyerupai kutil bergerigi (seperti kembang kol)?",
-                    possibleConditions: ["Oral Papillomatosis", "Gingivitis", "Stomatitis"]
+                    question: "Apakah terdapat benjolan atau kutil bergerigi di area bibir, lidah, atau gusi?",
+                    possibleConditions: ["Oral Papillomatosis", "Gingivitis", "Feline Stomatitis"]
                 };
             } else if (step === 1) {
                 return {
@@ -551,8 +553,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     type: "question",
                     detectedSpecies: petType,
                     confidence: 89,
-                    question: "Apakah ada pendarahan aktif atau bau mulut tidak sedap dari area benjolan?",
-                    possibleConditions: ["Oral Papillomatosis"]
+                    question: "Apakah ada pendarahan aktif atau aroma bau busuk dari area rongga mulut?",
+                    possibleConditions: ["Oral Papillomatosis", "Stomatitis Ulseratif"]
                 };
             } else {
                 return {
@@ -562,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     diseases: [{
                         name: "Oral Papillomatosis (Benjolan Virus Mukosa Mulut)",
                         severity: "sedang",
-                        description: "Pertumbuhan kutil jinak pada mukosa mulut dan gusi akibat infeksi Canine/Feline Papillomavirus.",
+                        description: "Pertumbuhan kutil jinak pada mukosa mulut dan gusi akibat infeksi Papillomavirus.",
                         treatments: [
                             "Bilas rongga mulut dengan larutan antiseptik Chlorhexidine 0.12% khusus hewan",
                             "Berikan makanan bertekstur sangat lunak (wet food kaleng) agar tidak menggesek benjolan",
@@ -576,71 +578,146 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Path 3: Kulit & Bulu / Ringworm / Scabies / Dermatitis (Default)
+        // Path 3: Flu / Saluran Napas / Mata & Hidung
+        if (isRespiratory) {
+            if (step === 0) {
+                return {
+                    type: "question",
+                    detectedSpecies: petType,
+                    confidence: 45,
+                    question: "Apakah terdapat kotoran belek menumpuk di sudut mata atau hidung berlendir?",
+                    possibleConditions: ["Feline Upper Respiratory Infection (Cat Flu)", "Calicivirus", "Konjungtivitis"]
+                };
+            } else if (step === 1) {
+                return {
+                    type: "question",
+                    detectedSpecies: petType,
+                    confidence: 72,
+                    question: "Apakah anabul bersin-bersin berulang kali atau napasnya terdengar berbunyi grok-grok?",
+                    possibleConditions: ["Cat Flu (FHV-1/FCV)", "Rhinotracheitis"]
+                };
+            } else if (step === 2) {
+                return {
+                    type: "question",
+                    detectedSpecies: petType,
+                    confidence: 90,
+                    question: "Apakah nafsu makan anabul menurun karena indra penciumannya terganggu hidung tersumbat?",
+                    possibleConditions: ["Feline Rhinotracheitis", "Calicivirus Akut"]
+                };
+            } else {
+                return {
+                    type: "diagnosis",
+                    detectedSpecies: petType,
+                    confidence: 95,
+                    diseases: [{
+                        name: "Feline Upper Respiratory Tract Infection (Flu Kucing & Konjungtivitis)",
+                        severity: "sedang",
+                        description: "Infeksi saluran pernapasan atas akibat Feline Herpesvirus (FHV-1) atau Calicivirus yang memicu pilek, bersin, dan mata berair.",
+                        treatments: [
+                            "Bersihkan kerak mata dan hidung menggunakan kapas hangat atau larutan NaCl steril secara berkala",
+                            "Lakukan terapi uap (nebulasi / uap air panas) selama 10-15 menit untuk mengencerkan lendir hidung",
+                            "Berikan makanan basah hangat beraroma kuat untuk merangsang nafsu makan",
+                            "Segera ke klinik dokter hewan jika anabul bernapas lewat mulut atau demam tinggi"
+                        ],
+                        urgency: "kuning",
+                        citation: "Jurnal Kedokteran Hewan (JKH) Vol. 16 SINTA 2: Penanganan Kasus Upper Respiratory Infection pada Kucing"
+                    }]
+                };
+            }
+        }
+
+        // Path 4: Kulit / Jamur / Kudis / Luka / Gatal
+        if (isSkin) {
+            if (step === 0) {
+                return {
+                    type: "question",
+                    detectedSpecies: petType,
+                    confidence: 42,
+                    question: "Apakah terdapat area kebotakan melingkar (pitak), ruam kemerahan, atau kerak pada kulit?",
+                    possibleConditions: ["Dermatitis Ringworm (Jamur)", "Scabies (Kudis Mange)", "Alergi Pakan/Flea Bite"]
+                };
+            } else if (step === 1) {
+                return {
+                    type: "question",
+                    detectedSpecies: petType,
+                    confidence: 70,
+                    question: "Apakah anabul sering menggaruk, menggigit, atau menggesekkan area luka tersebut?",
+                    possibleConditions: ["Dermatitis Ringworm (Jamur)", "Scabies (Kudis)"]
+                };
+            } else if (step === 2) {
+                return {
+                    type: "question",
+                    detectedSpecies: petType,
+                    confidence: 90,
+                    question: "Apakah permukaan kulit tampak bersisik atau mengeluarkan cairan/darah akibat garukan?",
+                    possibleConditions: ["Dermatitis Fungal & Ringworm", "Dermatofitosis Klinis"]
+                };
+            } else {
+                return {
+                    type: "diagnosis",
+                    detectedSpecies: petType,
+                    confidence: 95,
+                    diseases: [{
+                        name: petType === 'kucing' ? "Dermatitis Fungal & Ringworm (Dermatofitosis Kucing)" : "Dermatitis & Kudis Mange / Scabies (Canine Sarcoptic Mange)",
+                        severity: "sedang",
+                        description: "Infeksi dermatofit atau tungau parasit pada lapisan kulit yang memicu kerontokan bulu dan peradangan epidermal.",
+                        treatments: [
+                            "Bersihkan area ruam luka dengan larutan antiseptik Chlorhexidine 2%",
+                            "Oleskan salep antijamur/antiparasit khusus hewan tipis-tipis 2x sehari dan pasang e-collar (cone)",
+                            "Isolasi anabul di ruangan kering, sterilkan tempat tidur, dan mandikan dengan sampo terapeutik",
+                            "Gunakan sarung tangan saat merawat karena beberapa jenis jamur bersifat zoonosis"
+                        ],
+                        urgency: "kuning",
+                        citation: "Jurnal Kedokteran Hewan Indonesia (JKHI), Vol. 15, SINTA 2: Diagnosa Dermatofitosis dan Scabies Klinis"
+                    }]
+                };
+            }
+        }
+
+        // Path 5 (Default / Lemas / Kelemahan Fisik / Darurat Medis Vital)
         if (step === 0) {
             return {
                 type: "question",
                 detectedSpecies: petType,
-                confidence: 40,
-                question: "Apakah terdapat area kebotakan melingkar (pitak) atau ruam kemerahan pada kulit?",
-                possibleConditions: ["Dermatitis Ringworm (Jamur)", "Scabies (Kudis Mange)", "Alergi Pakan/Flea Bite"]
+                confidence: 45,
+                question: "Apakah anabul tampak sangat lemas, pasif berbaring, atau nafsu makannya menurun drastis?",
+                possibleConditions: ["Kelemahan Fisik Klinis", "Dehidrasi Akut", "Suspect Infeksi Sistemik / Virus"]
             };
         } else if (step === 1) {
             return {
                 type: "question",
                 detectedSpecies: petType,
-                confidence: 68,
-                question: "Apakah anabul sering menggaruk, menggigit, atau menggesekkan area tersebut?",
-                possibleConditions: ["Dermatitis Ringworm (Jamur)", "Scabies (Kudis)"]
+                confidence: 72,
+                question: "Apakah gusi anabul terasa pucat/kering, atau suhu tubuhnya terasa dingin/sangat panas?",
+                possibleConditions: ["Dehidrasi Klinis Akut", "Anemia / Shock Sirkulasi"]
             };
         } else if (step === 2) {
             return {
                 type: "question",
                 detectedSpecies: petType,
-                confidence: 88,
-                question: "Apakah permukaan kulit tampak bersisik, berkerak tebal, atau mengeluarkan cairan?",
-                possibleConditions: ["Dermatitis Fungal & Ringworm", "Dermatofitosis Klinis"]
+                confidence: 90,
+                question: "Apakah ada riwayat diare cair, tidak bisa berdiri, atau belum makan lebih dari 24 jam?",
+                possibleConditions: ["Kelemahan Sistemik & Dehidrasi Berat", "Emergency Shock Syndrome"]
             };
         } else {
-            if (petType === 'kucing') {
-                return {
-                    type: "diagnosis",
-                    detectedSpecies: "kucing",
-                    confidence: 95,
-                    diseases: [{
-                        name: "Dermatitis Fungal & Ringworm (Dermatofitosis Kucing)",
-                        severity: "sedang",
-                        description: "Infeksi jamur Microsporum canis pada folikel rambut yang menyebabkan kebotakan melingkar dan gatal.",
-                        treatments: [
-                            "Bersihkan area ruam pitak dengan larutan antiseptik Chlorhexidine 2%",
-                            "Oleskan salep antijamur Miconazole 2% tipis-tipis 2x sehari dan pasang e-collar (cone)",
-                            "Isolasi anabul di ruangan kering, sterilkan tempat tidur, dan mandikan dengan sampo ketoconazole",
-                            "Hindari memegang area luka tanpa sarung tangan karena ringworm bersifat zoonosis"
-                        ],
-                        urgency: "kuning",
-                        citation: "Jurnal Kedokteran Hewan Indonesia (JKHI), Vol. 15, SINTA 2: Diagnosa Dermatofitosis Kucing"
-                    }]
-                };
-            } else {
-                return {
-                    type: "diagnosis",
-                    detectedSpecies: "anjing",
-                    confidence: 95,
-                    diseases: [{
-                        name: "Dermatitis & Kudis Mange / Scabies (Canine Sarcoptic Mange)",
-                        severity: "sedang",
-                        description: "Iritasi kulit intens akibat infestasi tungau Sarcoptes scabiei yang memicu keropeng dan gatal hebat.",
-                        treatments: [
-                            "Bersihkan area kerak luka dengan kasa steril dan antiseptik Chlorhexidine",
-                            "Gunakan salep antiparasit atau obat tetes kutu/tungau berlisensi dokter hewan",
-                            "Pasang e-collar pelindung agar anjing tidak melukai kulit sendiri saat menggaruk",
-                            "Sterilkan kandang dan alas tidur dengan desinfektan anti-tungau secara berkala"
-                        ],
-                        urgency: "kuning",
-                        citation: "Jurnal Veteriner UGM/IPB Vol 22 (SINTA 1): Penanganan Scabies & Mange Pada Canine"
-                    }]
-                };
-            }
+            return {
+                type: "diagnosis",
+                detectedSpecies: petType,
+                confidence: 96,
+                diseases: [{
+                    name: "Kelemahan Sistemik Akut & Suspect Dehidrasi Klinis",
+                    severity: "tinggi",
+                    description: "Penurunan vitalitas tubuh drastis akibat gangguan metabolisme, dehidrasi, atau infeksi sistemik yang membutuhkan terapi cairan/rehidrasi segera.",
+                    treatments: [
+                        "Jaga suhu tubuh anabul tetap hangat menggunakan selimut lembut atau lampu pemanas hangat",
+                        "Berikan larutan rehidrasi elektrolit oral khusus hewan sedikit demi sedikit menggunakan spuit tumpul",
+                        "Hindari memaksa makanan padat jika anabul menolak; tawarkan pakan basah tinggi nutrisi (recovery food)",
+                        "SEGERA bawa ke klinik dokter hewan terdekat untuk pemeriksaan darah lengkap dan pemasangan terapi infus IV"
+                    ],
+                    urgency: "merah",
+                    citation: "Standar Pelayanan Medis Veteriner PDHI 2024: Protokol Triase Gawat Darurat dan Rehidrasi Anabul"
+                }]
+            };
         }
     }
 
