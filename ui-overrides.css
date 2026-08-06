@@ -1051,6 +1051,21 @@ html, body {
    RESPONSIVE MOBILE OVERRIDES (HP / TABLET SCREEN PROTECTION)
    ========================================================================== */
 @media (max-width: 768px) {
+  /* Navbar Brand Logo Centered on Mobile */
+  .top-nav .nav-container {
+    justify-content: center !important;
+  }
+
+  .top-nav .brand-logo {
+    justify-content: center !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  .top-nav .nav-links {
+    display: none !important;
+  }
+
   /* Hero Section Typography & Balance */
   .hero-section {
     padding: 28px 16px 20px !important;
