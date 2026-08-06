@@ -1174,13 +1174,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderVetClinics() {
-        elements.vetClinicList.innerHTML = `<div class="location-note"><strong>Pilih cara mencari klinik</strong><p>Izinkan lokasi untuk rekomendasi yang lebih relevan, atau cari manual lewat Google Maps.</p><button class="btn-brutalist btn-brutalist-primary" id="btnUseLocation"><i data-lucide="navigation"></i> Gunakan lokasiku</button><a class="btn-brutalist" target="_blank" rel="noopener" href="https://www.google.com/maps/search/dokter+hewan+terdekat">Cari manual di Google Maps</a></div>`;
+        elements.vetClinicList.innerHTML = `
+            <div class="location-note" style="text-align:left; padding: 4px 0;">
+                <p style="font-size:0.92rem; line-height:1.45; color:var(--text-secondary,#475569); margin-bottom:16px;">
+                    Cari klinik & dokter hewan terdekat lewat Google Maps untuk melihat jam operasional (buka/tutup), nomor telepon, dan rute navigasi.
+                </p>
+                <button class="btn-brutalist btn-brutalist-primary" id="btnUseLocation" style="width:100%; margin-bottom:10px; justify-content:center; gap:8px; padding:12px 16px;">
+                    <i data-lucide="crosshair" style="width:18px; height:18px;"></i> Gunakan GPS Lokasiku (Akurat)
+                </button>
+                <a class="btn-brutalist" target="_blank" rel="noopener" href="https://www.google.com/maps/search/dokter+hewan+terdekat" style="width:100%; justify-content:center; gap:8px; padding:12px 16px; text-decoration:none; display:flex; align-items:center;">
+                    <i data-lucide="map" style="width:18px; height:18px;"></i> Buka Langsung di Google Maps
+                </a>
+            </div>
+        `;
         document.getElementById('btnUseLocation').addEventListener('click', () => {
-            if (!navigator.geolocation) return;
+            if (!navigator.geolocation) {
+                window.open('https://www.google.com/maps/search/dokter+hewan+terdekat', '_blank', 'noopener');
+                return;
+            }
             navigator.geolocation.getCurrentPosition(pos => {
                 const { latitude, longitude } = pos.coords;
                 window.open(`https://www.google.com/maps/search/dokter+hewan+terdekat/@${latitude},${longitude},14z`, '_blank', 'noopener');
-            }, () => { elements.vetClinicList.querySelector('.location-note p').textContent = 'Lokasi tidak tersedia. Gunakan pencarian manual di Google Maps.'; });
+            }, () => { 
+                window.open('https://www.google.com/maps/search/dokter+hewan+terdekat', '_blank', 'noopener'); 
+            });
         });
         if (window.lucide) window.lucide.createIcons();
         return;
