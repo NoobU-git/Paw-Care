@@ -167,9 +167,28 @@ document.addEventListener('DOMContentLoaded', () => {
         lastPawY = clientY;
     }
 
+    // Instant Responsive Paw Tap Effect (Mobile Touch & Desktop Click)
+    function spawnTapPaw(clientX, clientY) {
+        if (!clientX && clientX !== 0) return;
+        const paw = document.createElement('div');
+        paw.className = 'paw-trail paw-tap';
+        paw.style.left = `${clientX - 13}px`;
+        paw.style.top = `${clientY - 13}px`;
+        paw.style.setProperty('--paw-rotate', `${(Math.random() - 0.5) * 50}deg`);
+        paw.style.setProperty('--paw-color', pawColors[pawColorIdx % pawColors.length]);
+        pawColorIdx++;
+
+        paw.innerHTML = '<span class="paw-pad"></span><span class="paw-toe paw-toe-1"></span><span class="paw-toe paw-toe-2"></span><span class="paw-toe paw-toe-3"></span>';
+        document.body.appendChild(paw);
+        window.setTimeout(() => paw.remove(), 550);
+    }
+
     document.addEventListener('mousemove', (e) => handleCursorMove(e.clientX, e.clientY), { passive: true });
     window.addEventListener('pointermove', (e) => {
         if (e.pointerType !== 'touch') handleCursorMove(e.clientX, e.clientY);
+    }, { passive: true });
+    window.addEventListener('pointerdown', (e) => {
+        spawnTapPaw(e.clientX, e.clientY);
     }, { passive: true });
 
     // Pet Species Switch
