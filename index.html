@@ -40,9 +40,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Custom Stylesheet with Cache-Buster v24.0.0 -->
-    <link rel="stylesheet" href="styles.css?v=24.0.0">
-    <link rel="stylesheet" href="ui-overrides.css?v=24.0.0">
+    <!-- Custom Stylesheet with Cache-Buster v25.0.0 -->
+    <link rel="stylesheet" href="styles.css?v=25.0.0">
+    <link rel="stylesheet" href="ui-overrides.css?v=25.0.0">
 </head>
 <body>
 
@@ -269,8 +269,8 @@
                             <i data-lucide="navigation" style="width:24px; height:24px;"></i>
                         </div>
                         <div>
-                            <div class="bento-title">GPS Emergency Vet Finder</div>
-                            <div class="bento-desc">Pencarian klinik hewan 24 jam terdekat dengan fitur panggilan telepon darurat.</div>
+                            <div class="bento-title">Pencarian Vet & Dokter Hewan</div>
+                            <div class="bento-desc">Pencarian klinik dan dokter hewan terdekat via Google Maps untuk cek jam buka dan rute tercepat.</div>
                         </div>
                     </div>
                 </div>
@@ -297,6 +297,7 @@
 
         <hr class="section-divider">
 
+        <!-- SECTION 2: ABOUT / LATAR BELAKANG / FITUR -->
         <section id="about" class="about-section-container reveal-on-scroll" data-view="about">
             <div class="section-header" style="text-align:center; margin-bottom:32px;">
                 <div class="badge-mono"><i data-lucide="info"></i> TENTANG PAWCARE AI</div>
@@ -308,41 +309,15 @@
             <div class="about-hero-card">
                 <div class="about-hero-content">
                     <div class="badge-mono" style="background:#ffd84d;">MISI KAMI</div>
-                <p>Panduan mandiri untuk memahami gejala, pencegahan, dan keselamatan anabul kesayangan.</p>
-            </div>
-            
-            <!-- Dynamic Category Filter -->
-            <div class="filter-wrapper" id="literacyFilterWrapper" role="region" aria-label="Filter Kategori">
-                <button type="button" class="filter-btn active" data-cat="all"><i data-lucide="sparkles"></i> Semua Topik</button>
-                <button type="button" class="filter-btn" data-cat="Kucing"><i data-lucide="cat"></i> Kucing</button>
-                <button type="button" class="filter-btn" data-cat="Anjing"><i data-lucide="dog"></i> Anjing</button>
-                <button type="button" class="filter-btn" data-cat="Toksikologi"><i data-lucide="alert-triangle"></i> Toksikologi</button>
-                <button type="button" class="filter-btn" data-cat="Pertolongan Pertama"><i data-lucide="heart-pulse"></i> Pertolongan Pertama</button>
-            </div>
-
-            <!-- Enhanced Content Cards Grid -->
-            <div class="literacy-grid" id="literacyGrid"></div>
-        </section>
-
-        <hr class="section-divider">
-
-        <!-- SECTION 2: ABOUT / LATAR BELAKANG / FITUR -->
-        <section id="about" class="about-section reveal-on-scroll" data-view="about">
-            <div class="section-header">
-                <div class="badge-mono">TENTANG PAWCARE AI</div>
-                <h2>Teknologi Cerdas untuk Keselamatan Anabul</h2>
-                <p>Platform literasi dan respon darurat hewan peliharaan berbasis kecerdasan buatan.</p>
-            </div>
-
-            <!-- About Hero Story -->
-            <div class="about-story-card">
-                <div class="about-story-text">
-                    <span class="about-eyebrow"><i data-lucide="shield-check"></i> Mengapa PawCare AI Hadir?</span>
-                    <h3>Menjembatani Kepanikan Menjadi Tindakan Tepat</h3>
-                    <p>Saat anabul tiba-tiba lemas, muntah, atau kejang, pemilik seringkali panik dan mencari info sembarangan di internet yang berisiko fatal—seperti memberikan paracetamol.</p>
-                    <p><strong>PawCare AI</strong> hadir memberikan panduan triase instan, aman, dan berbasis jurnal medis veteriner terakreditasi sebelum anabul tiba di klinik dokter hewan.</p>
+                    <h3>Menyelamatkan Anabul dari Penanganan yang Salah</h3>
+                    <p>Banyak pemilik anabul panik saat hewan peliharaannya sakit dan secara tidak sengaja memberikan obat manusia yang berakibat fatal (seperti Paracetamol pada kucing). <strong>PawCare AI</strong> hadir sebagai jembatan pertolongan pertama instan untuk memandu tindakan yang aman sebelum dibawa ke klinik dokter hewan.</p>
+                    <div class="about-stats-row">
+                        <div class="about-stat-pill"><strong>Multi-Modal Vision</strong><span>Deteksi foto visual gejala</span></div>
+                        <div class="about-stat-pill"><strong>SINTA Citations</strong><span>Rujukan jurnal ilmiah terpercaya</span></div>
+                        <div class="about-stat-pill"><strong>Anti-Panik Triase</strong><span>Prioritas tindakan terukur</span></div>
+                    </div>
                 </div>
-                <div class="about-story-visual">
+                <div class="about-hero-img-wrap">
                     <img src="assets/pawcare-full-logo.png" alt="PawCare AI Brand Emblem" style="max-width:280px; width:100%; border-radius:18px; box-shadow:6px 6px 0 var(--navy,#17233d); border:2px solid var(--navy,#17233d); background:#fff;">
                 </div>
             </div>
@@ -652,7 +627,7 @@
         <a href="#about" class="mobile-nav-btn" data-nav-view="about"><i data-lucide="info"></i><span>About</span></a>
     </nav>
 
-    <!-- App Script with Cache-Buster v24.0.0 -->
-    <script src="app.js?v=24.0.0"></script>
+    <!-- App Script with Cache-Buster v25.0.0 -->
+    <script src="app.js?v=25.0.0"></script>
 </body>
 </html>
