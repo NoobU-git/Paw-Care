@@ -890,11 +890,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const citationsHtml = (data.citations || []).map(c => `<li style="margin-bottom: 3px;">${c}</li>`).join('');
 
+        const logoSrc = (document.querySelector('.top-nav .brand-logo img') && document.querySelector('.top-nav .brand-logo img').src) || (window.location.origin + '/assets/pawcare-icon.png');
+
         const printHtml = `
         <!DOCTYPE html>
         <html lang="id">
         <head>
             <meta charset="UTF-8">
+            <base href="${window.location.origin}/">
             <title>Laporan_Triase_PawCare_${reportId}</title>
             <style>
                 @page {
@@ -1019,10 +1022,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <!-- KOP SURAT RESMI -->
             <table class="header-table">
                 <tr>
-                    <td style="width: 50px; vertical-align: middle;">
-                        <img src="assets/pawcare-icon.png" style="width: 44px; height: 44px; border-radius: 10px; border: 1.5px solid #17233d;">
+                    <td style="width: 54px; vertical-align: middle;">
+                        <img src="${logoSrc}" alt="PawCare Logo" style="width: 48px; height: 48px; object-fit: contain; border-radius: 10px; border: 1.5px solid #17233d; background: #ffffff; display: block;">
                     </td>
-                    <td style="vertical-align: middle; padding-left: 8px;">
+                    <td style="vertical-align: middle; padding-left: 10px;">
                         <div style="font-size: 13pt; font-weight: 900; color: #17233d; letter-spacing: -0.01em;">PAWCARE AI — VETERINARY TRIAGE</div>
                         <div style="font-size: 7.5pt; font-weight: 700; color: #0284c7; letter-spacing: 0.06em;">EARLY CARE, BETTER LIFE · EVIDENCE-BASED PET TRIAGE SYSTEM</div>
                     </td>
@@ -1126,7 +1129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             printFrame.contentWindow.focus();
             printFrame.contentWindow.print();
-        }, 400);
+        }, 650);
     }
 
     // PDF Export Action
