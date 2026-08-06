@@ -59,6 +59,37 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "Klinik & Pet Emergency VetCare", dist: "4.8 km", phone: "081165004455" }
     ];
 
+    // Menu views: show one destination at a time, without a long scroll.
+    const page = document.querySelector('.page-container');
+    const viewTargets = [...document.querySelectorAll('[data-view]')];
+    function setView(view) {
+        page.classList.add('view-mode');
+        viewTargets.forEach(el => el.classList.toggle('is-active', el.dataset.view === view));
+        document.querySelectorAll('[data-nav-view]').forEach(el => {
+            const active = el.dataset.navView === view;
+            el.classList.toggle('is-active', active);
+            if (active) el.setAttribute('aria-current', 'page'); else el.removeAttribute('aria-current');
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    const viewFromHash = hash => ({ '#literasi': 'literasi', '#about': 'about', '#workspace': 'workspace' }[hash] || 'home');
+    const navigateView = (view, push = true) => {
+        setView(view);
+        const hash = view === 'home' ? '#home' : `#${view}`;
+        if (push && location.hash !== hash) history.pushState(null, '', hash);
+    };
+    document.querySelectorAll('a[href^="#"], [data-go-view]').forEach(link => {
+        link.addEventListener('click', event => {
+            const view = link.dataset.goView || viewFromHash(link.getAttribute('href') || '');
+            if (!view) return;
+            event.preventDefault();
+            navigateView(view);
+        });
+    });
+    window.addEventListener('popstate', () => navigateView(viewFromHash(location.hash), false));
+    window.addEventListener('hashchange', () => setView(viewFromHash(location.hash)));
+    setView(viewFromHash(location.hash));
+
     // Scroll Animation Observer (Fade In/Out on Scroll)
     const scrollObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -74,6 +105,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Icons on First Load
     if (window.lucide) window.lucide.createIcons();
+
+    // Playful cursor parallax & cute paw-print trail
+    const visual = document.querySelector('.hero-visual');
+    const scene = document.querySelector('.hero-section');
+    let lastPaw = 0;
+    let lastX = null;
+    let lastY = null;
+    let lastPawTime = 0;
+    let lastPawX = null;
+    let lastPawY = null;
+    let pawSide = 1;
+    const pawColors = ['#ff6b8b', '#ffb703', '#06d6a0', '#118ab2', '#9d4edd', '#fb8500'];
+    let pawColorIdx = 0;
+
+    function handleCursorMove(clientX, clientY) {
+        const x = clientX / window.innerWidth - 0.5;
+        const y = clientY / window.innerHeight - 0.5;
+        if (visual) {
+            visual.style.setProperty('--mouse-x', `${x * 12}px`);
+            visual.style.setProperty('--mouse-y', `${y * 12}px`);
+        }
+        if (scene) {
+            scene.style.setProperty('--blob-x', `${x * 18}px`);
+            scene.style.setProperty('--blob-y', `${y * 18}px`);
+        }
+
+        const now = performance.now();
+        if (lastPawX === null) {
+            lastPawX = clientX;
+            lastPawY = clientY;
+            return;
+        }
+        const dx = clientX - lastPawX;
+        const dy = clientY - lastPawY;
+        const dist = Math.hypot(dx, dy);
+        if (now - lastPawTime < 75 || dist < 28) return;
+
+        const baseAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+        const perpAngle = Math.atan2(dy, dx) + Math.PI / 2;
+        const lateralOffset = 14 * pawSide; // Realistic left-right paw track distance
+        const spawnX = clientX + Math.cos(perpAngle) * lateralOffset;
+        const spawnY = clientY + Math.sin(perpAngle) * lateralOffset;
+        const naturalAngle = baseAngle + (pawSide * 6); // Subtle natural outward step angle
+
+        const paw = document.createElement('div');
+        paw.className = 'paw-trail';
+        paw.style.left = `${spawnX - 13}px`;
+        paw.style.top = `${spawnY - 13}px`;
+        paw.style.setProperty('--paw-rotate', `${naturalAngle}deg`);
+        paw.style.setProperty('--paw-color', pawColors[pawColorIdx % pawColors.length]);
+        pawColorIdx++;
+
+        paw.innerHTML = '<span class="paw-pad"></span><span class="paw-toe paw-toe-1"></span><span class="paw-toe paw-toe-2"></span><span class="paw-toe paw-toe-3"></span>';
+        document.body.appendChild(paw);
+        window.setTimeout(() => paw.remove(), 1000);
+
+        pawSide *= -1;
+        lastPawTime = now;
+        lastPawX = clientX;
+        lastPawY = clientY;
+    }
+
+    document.addEventListener('mousemove', (e) => handleCursorMove(e.clientX, e.clientY), { passive: true });
+    window.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'touch') handleCursorMove(e.clientX, e.clientY);
+    }, { passive: true });
 
     // Pet Species Switch
     elements.optCat.addEventListener('click', () => {
@@ -376,8 +473,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function showSpeciesToast(message) {
+        let toast = document.getElementById('pawcareToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'pawcareToast';
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                z-index: 10000;
+                background: #ffd84d;
+                color: #17233d;
+                border: 2px solid #17233d;
+                border-radius: 12px;
+                padding: 12px 18px;
+                box-shadow: 4px 4px 0 #17233d;
+                font-weight: 800;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+                animation: toastIn 0.3s ease forwards;
+            `;
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<span>🐾</span> <span>${message}</span>`;
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+        setTimeout(() => {
+            if (toast) {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(12px)';
+            }
+        }, 4000);
+    }
+
+    function applyDetectedSpecies(detected) {
+        if (!detected) return;
+        const det = detected.toLowerCase();
+        if (det === 'anjing' && state.selectedPetType !== 'anjing') {
+            state.selectedPetType = 'anjing';
+            akinatorState.originalPetType = 'anjing';
+            elements.optDog.classList.add('active');
+            elements.optCat.classList.remove('active');
+            showSpeciesToast('AI mendeteksi Anjing pada foto. Triase disesuaikan otomatis!');
+        } else if (det === 'kucing' && state.selectedPetType !== 'kucing') {
+            state.selectedPetType = 'kucing';
+            akinatorState.originalPetType = 'kucing';
+            elements.optCat.classList.add('active');
+            elements.optDog.classList.remove('active');
+            showSpeciesToast('AI mendeteksi Kucing pada foto. Triase disesuaikan otomatis!');
+        }
+    }
+
     async function handleAkinatorResponse(data) {
         document.getElementById('akinatorLoading').classList.add('hidden');
+
+        // Handle Non-Cat/Dog Photos
+        if (data.type === 'unsupported') {
+            alert(data.message || 'PawCare saat ini dioptimalkan khusus untuk Kucing & Anjing. Silakan unggah foto anabul.');
+            return null;
+        }
+
+        // Auto-correct species if Gemini detected different animal
+        if (data.detectedSpecies) {
+            applyDetectedSpecies(data.detectedSpecies);
+        }
+
         document.getElementById('akinatorQuestionCard').classList.remove('hidden');
         
         // Update Confidence Bar
@@ -651,6 +815,31 @@ document.addEventListener('DOMContentLoaded', () => {
         window.print();
     });
 
+    const articleData = {
+        jamur: ['Jamur pada Kucing Bisa Menular ke Manusia?', 'Kurap atau dermatofitosis dapat menular antarhewan dan ke manusia. Amati area botak, bersisik, atau gatal; jangan berbagi alat grooming dan konsultasikan terapi ke dokter hewan.', 'Cornell Feline Health Center · Merck Veterinary Manual'],
+        muntah: ['Kucing Muntah Sekali, Bahaya atau Normal?', 'Satu kali muntah belum tentu darurat, tetapi catat waktu, isi muntahan, frekuensi, nafsu makan, dan minum. Muntah berulang, darah, lemas, atau tidak bisa menahan air perlu diperiksa.', 'VCA Animal Hospitals · Merck Veterinary Manual'],
+        napas: ['Napas Kucing Cepat: Tunggu atau ke Dokter?', 'Kesulitan bernapas, napas dengan mulut terbuka, gusi kebiruan, pingsan, atau tidak responsif adalah tanda darurat. Jangan menunda dan jangan memberi obat manusia.', 'Cornell Feline Health Center · VCA Animal Hospitals'],
+        makan: ['Anjing Tidak Mau Makan: Kapan Khawatir?', 'Amati durasi, minum, muntah, diare, nyeri, dan perubahan perilaku. Bila berlangsung, disertai lemas, atau ada gejala lain, hubungi dokter hewan.', 'Merck Veterinary Manual · VCA Animal Hospitals'],
+        diare: ['Diare pada Anjing: Apa yang Perlu Diamati?', 'Catat frekuensi, warna, darah/lendir, muntah, dan kondisi hidrasi. Darah, lemas berat, atau diare berulang memerlukan evaluasi dokter.', 'Merck Veterinary Manual · ASPCA'],
+        kulit: ['Perubahan Kulit pada Kucing dan Anjing', 'Foto area dengan cahaya cukup dan hindari krim atau obat manusia. Perlu pemeriksaan bila menyebar, bernanah, sangat gatal, atau disertai demam/lemas.', 'VCA Animal Hospitals · Merck Veterinary Manual']
+    };
+    const articleModal = document.getElementById('articleModal');
+    const articleBody = document.getElementById('articleModalBody');
+    document.querySelectorAll('[data-article]').forEach(card => card.addEventListener('click', () => {
+        const [title, text, sources] = articleData[card.dataset.article];
+        document.getElementById('articleModalTitle').textContent = title;
+        articleBody.innerHTML = `<p>${text}</p><h4>Catatan aman</h4><p>Informasi ini untuk edukasi awal, bukan diagnosis. Jika kondisi memburuk atau tampak darurat, hubungi dokter hewan.</p><small><strong>Referensi:</strong> ${sources}</small>`;
+        articleModal.classList.remove('hidden');
+        articleModal.querySelector('[data-close-modal]').focus();
+    }));
+    document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => articleModal.classList.add('hidden')));
+    articleModal.addEventListener('click', e => { if (e.target === articleModal) articleModal.classList.add('hidden'); });
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        articleModal.classList.add('hidden');
+        elements.vetBottomSheet.classList.add('hidden');
+    });
+
     // Vet Modal Event Handlers
     function openVetModal() {
         renderVetClinics();
@@ -662,6 +851,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderVetClinics() {
+        elements.vetClinicList.innerHTML = `<div class="location-note"><strong>Pilih cara mencari klinik</strong><p>Izinkan lokasi untuk rekomendasi yang lebih relevan, atau cari manual lewat Google Maps.</p><button class="btn-brutalist btn-brutalist-primary" id="btnUseLocation"><i data-lucide="navigation"></i> Gunakan lokasiku</button><a class="btn-brutalist" target="_blank" rel="noopener" href="https://www.google.com/maps/search/dokter+hewan+terdekat">Cari manual di Google Maps</a></div>`;
+        document.getElementById('btnUseLocation').addEventListener('click', () => {
+            if (!navigator.geolocation) return;
+            navigator.geolocation.getCurrentPosition(pos => {
+                const { latitude, longitude } = pos.coords;
+                window.open(`https://www.google.com/maps/search/dokter+hewan+terdekat/@${latitude},${longitude},14z`, '_blank', 'noopener');
+            }, () => { elements.vetClinicList.querySelector('.location-note p').textContent = 'Lokasi tidak tersedia. Gunakan pencarian manual di Google Maps.'; });
+        });
+        if (window.lucide) window.lucide.createIcons();
+        return;
+        /* ponytail: local clinic cards remain the offline fallback; add live provider only when verified. */
         elements.vetClinicList.innerHTML = '';
         clinicData.forEach(item => {
             const el = document.createElement('div');
