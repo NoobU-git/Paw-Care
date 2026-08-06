@@ -1030,9 +1030,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div style="font-size: 7.5pt; font-weight: 700; color: #0284c7; letter-spacing: 0.06em;">EARLY CARE, BETTER LIFE · EVIDENCE-BASED PET TRIAGE SYSTEM</div>
                     </td>
                     <td style="text-align: right; vertical-align: middle; font-size: 7.5pt; color: #475569;">
-                        <div style="font-weight: 800; color: #17233d; font-size: 8.5pt;">INSTITUT TEKNOLOGI PLN</div>
-                        <div>Fakultas Telematika Energi · Jakarta</div>
-                        <div style="color: #059669; font-weight: 700;">● Hasil Verifikasi AI</div>
+                        <div style="display: inline-block; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 3px 8px; border-radius: 4px; color: #065f46; font-weight: 800; font-size: 8pt; margin-bottom: 2px;">
+                            ● HASIL VERIFIKASI AI
+                        </div>
+                        <div style="font-size: 7.5pt; color: #64748b; font-weight: 600;">PawCare Clinical AI System</div>
                     </td>
                 </tr>
             </table>
@@ -1106,9 +1107,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td style="width: 40%; text-align: center; vertical-align: bottom;">
                         <div style="font-size: 8pt; color: #64748b; margin-bottom: 22px;">Divalidasi oleh Sistem AI:</div>
                         <div style="font-weight: 800; font-size: 9pt; color: #17233d; border-bottom: 1px solid #17233d; display: inline-block; padding-bottom: 1px;">
-                            PawCare AI Research Team
+                            PawCare AI Research & Clinical Team
                         </div>
-                        <div style="font-size: 7.2pt; color: #64748b;">Institut Teknologi PLN (ITPLN) Jakarta</div>
+                        <div style="font-size: 7.2pt; color: #64748b;">Evidence-Based Veterinary Intelligence</div>
                     </td>
                 </tr>
             </table>
