@@ -194,14 +194,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Pet Species Switch
     elements.optCat.addEventListener('click', () => {
         state.selectedPetType = 'kucing';
+        akinatorState.originalPetType = 'kucing';
         elements.optCat.classList.add('active');
         elements.optDog.classList.remove('active');
+        showSpeciesToast('Mode Kucing Aktif 🐱');
     });
 
     elements.optDog.addEventListener('click', () => {
         state.selectedPetType = 'anjing';
+        akinatorState.originalPetType = 'anjing';
         elements.optDog.classList.add('active');
         elements.optCat.classList.remove('active');
+        showSpeciesToast('Mode Anjing Aktif 🐶');
     });
 
     // Fast-Track Preset Buttons for Judges Demo
@@ -271,14 +275,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (state.uploadedPhotos.length >= 4) return;
                 const fileNameLower = file.name.toLowerCase();
                 
-                if (fileNameLower.includes('cat') || fileNameLower.includes('kucing')) {
-                    state.selectedPetType = 'kucing';
-                    elements.optCat.classList.add('active');
-                    elements.optDog.classList.remove('active');
-                } else if (fileNameLower.includes('dog') || fileNameLower.includes('pug') || fileNameLower.includes('anjing')) {
+                const dogKeywords = ['dog', 'anjing', 'pug', 'puppy', 'golden', 'husky', 'beagle', 'poodle', 'pom', 'samoyed', 'shiba', 'pitbull', 'corgi', 'doberman', 'bulldog', 'dalmatian', 'rottweiler'];
+                const catKeywords = ['cat', 'kucing', 'kitten', 'persia', 'anggora', 'munchkin', 'sphynx', 'british', 'ragdoll', 'siam', 'bengal', 'tabby'];
+                
+                if (dogKeywords.some(k => fileNameLower.includes(k))) {
                     state.selectedPetType = 'anjing';
+                    akinatorState.originalPetType = 'anjing';
                     elements.optDog.classList.add('active');
                     elements.optCat.classList.remove('active');
+                    showSpeciesToast('AI mendeteksi foto Anjing 🐶. Mode triase dialihkan ke Anjing!');
+                } else if (catKeywords.some(k => fileNameLower.includes(k))) {
+                    state.selectedPetType = 'kucing';
+                    akinatorState.originalPetType = 'kucing';
+                    elements.optCat.classList.add('active');
+                    elements.optDog.classList.remove('active');
+                    showSpeciesToast('AI mendeteksi foto Kucing 🐱. Mode triase dialihkan ke Kucing!');
                 }
 
                 const reader = new FileReader();
@@ -431,10 +442,16 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('akinatorSection').classList.add('hidden');
             const outputData = generateTriage(textVal, state.selectedPetType);
             renderOutputUI(outputData);
-        } finally {
-            elements.scannerBar.classList.add('hidden');
             elements.btnSubmit.disabled = false;
             elements.btnSubmit.innerHTML = `<i data-lucide="sparkles"></i> Analisis Kesehatan Sekarang`;
+        } finally {
+            elements.scannerBar.classList.add('hidden');
+            // If still in akinator questioning, show helper text
+            if (!document.getElementById('akinatorSection').classList.contains('hidden')) {
+                elements.btnSubmit.disabled = true;
+                elements.btnSubmit.innerHTML = `<i data-lucide="help-circle"></i> Sesi Tanya Jawab Sedang Berlangsung 👉`;
+                lucide.createIcons();
+            }
         }
     }
 
@@ -679,24 +696,26 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 type: "question",
                 detectedSpecies: petType,
-                confidence: 45,
-                question: "Apakah anabul tampak sangat lemas, pasif berbaring, atau nafsu makannya menurun drastis?",
-                possibleConditions: ["Kelemahan Fisik Klinis", "Dehidrasi Akut", "Suspect Infeksi Sistemik / Virus"]
+                confidence: 42,
+                question: petType === 'anjing' 
+                    ? "Apakah anjing Anda tampak sangat lemas, pasif berbaring, atau ekornya tidak mengibas sama sekali?"
+                    : "Apakah anabul tampak sangat lemas, pasif berbaring, atau nafsu makannya menurun drastis?",
+                possibleConditions: [petType === 'anjing' ? "Kelemahan Fisik Anjing (Canine Lethargy)" : "Kelemahan Fisik Kucing", "Dehidrasi Akut", "Suspect Infeksi Sistemik"]
             };
         } else if (step === 1) {
             return {
                 type: "question",
                 detectedSpecies: petType,
-                confidence: 72,
-                question: "Apakah gusi anabul terasa pucat/kering, atau suhu tubuhnya terasa dingin/sangat panas?",
-                possibleConditions: ["Dehidrasi Klinis Akut", "Anemia / Shock Sirkulasi"]
+                confidence: 70,
+                question: "Apakah gusi anabul terasa pucat/kering, atau suhu tubuhnya (telinga & telapak kaki) terasa dingin/sangat panas?",
+                possibleConditions: ["Dehidrasi Klinis Akut", "Anemia / Penurunan Sirkulasi"]
             };
         } else if (step === 2) {
             return {
                 type: "question",
                 detectedSpecies: petType,
-                confidence: 90,
-                question: "Apakah ada riwayat diare cair, tidak bisa berdiri, atau belum makan lebih dari 24 jam?",
+                confidence: 88,
+                question: "Apakah ada riwayat muntah, tidak bisa berdiri seimbang, atau belum mau makan lebih dari 24 jam?",
                 possibleConditions: ["Kelemahan Sistemik & Dehidrasi Berat", "Emergency Shock Syndrome"]
             };
         } else {
@@ -705,9 +724,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 detectedSpecies: petType,
                 confidence: 96,
                 diseases: [{
-                    name: "Kelemahan Sistemik Akut & Suspect Dehidrasi Klinis",
+                    name: petType === 'anjing' ? "Kelemahan Sistemik Akut & Suspect Dehidrasi Klinis (Anjing)" : "Kelemahan Sistemik Akut & Suspect Dehidrasi Klinis (Kucing)",
                     severity: "tinggi",
-                    description: "Penurunan vitalitas tubuh drastis akibat gangguan metabolisme, dehidrasi, atau infeksi sistemik yang membutuhkan terapi cairan/rehidrasi segera.",
+                    description: `Penurunan vitalitas tubuh drastis pada ${petType === 'anjing' ? 'anjing' : 'kucing'} akibat gangguan metabolisme, dehidrasi, atau infeksi sistemik yang membutuhkan terapi cairan/rehidrasi segera.`,
                     treatments: [
                         "Jaga suhu tubuh anabul tetap hangat menggunakan selimut lembut atau lampu pemanas hangat",
                         "Berikan larutan rehidrasi elektrolit oral khusus hewan sedikit demi sedikit menggunakan spuit tumpul",
@@ -715,7 +734,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         "SEGERA bawa ke klinik dokter hewan terdekat untuk pemeriksaan darah lengkap dan pemasangan terapi infus IV"
                     ],
                     urgency: "merah",
-                    citation: "Standar Pelayanan Medis Veteriner PDHI 2024: Protokol Triase Gawat Darurat dan Rehidrasi Anabul"
+                    citation: petType === 'anjing'
+                        ? "Standar Pelayanan Medis Veteriner PDHI 2024 & Canine Emergency Protocol: Penanganan Triase Dehidrasi Anjing"
+                        : "Standar Pelayanan Medis Veteriner PDHI 2024: Protokol Triase Gawat Darurat dan Rehidrasi Anabul"
                 }]
             };
         }
@@ -908,8 +929,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('akinatorQuestionCard').classList.add('hidden');
             document.getElementById('akinatorLoading').classList.remove('hidden');
 
-            // Fetch next from AI (Hanya kirim foto di pertanyaan pertama saat Inisialisasi, jangan kirim lagi di lanjutan)
-            const photosToSend = [];
+            // Fetch next from AI (preserve photo context)
+            const photosToSend = akinatorState.originalPhotos || [];
             await processGeminiVisionAPI(akinatorState.originalInput, akinatorState.originalPetType, photosToSend, true);
         });
     });
