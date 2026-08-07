@@ -14,7 +14,8 @@
    - Tambahkan: GEMINI_API_KEY = <API key dari Google AI Studio>
    ========================================================================== */
 
-const GEMINI_MODEL = "gemini-3.5-flash-lite";
+const GEMINI_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-lite"];
+const GEMINI_MODEL = GEMINI_MODELS[0];
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 // Batas jumlah foto yang dikirim ke Gemini per request (jaga payload & kuota)
